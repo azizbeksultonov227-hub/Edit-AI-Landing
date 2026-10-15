@@ -1,0 +1,15 @@
+.git
+.next
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.env*
+Dockerfile
+.dockerignore
+README.md
+AGENTS.md
+CLAUDE.md
+videos
+public/media/uploads

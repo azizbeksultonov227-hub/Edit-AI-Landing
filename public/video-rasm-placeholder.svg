@@ -1,0 +1,23 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="1200" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E6E6E6"/>
+      <stop offset="1" stop-color="#CFCFCF"/>
+    </linearGradient>
+    <filter id="shadow" x="210" y="319" width="780" height="562" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="30" stdDeviation="40" flood-color="#000000" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="1200" rx="96" fill="url(#bg)"/>
+  <g opacity="0.5">
+    <circle cx="164" cy="174" r="72" fill="#F4F4F4"/>
+    <circle cx="1045" cy="1002" r="84" fill="#BEBEBE"/>
+    <rect x="922" y="154" width="196" height="196" rx="42" fill="#DADADA"/>
+    <rect x="104" y="862" width="250" height="250" rx="52" fill="#D7D7D7"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="250" y="360" width="700" height="480" rx="72" fill="#DEDEDE" stroke="#F2F2F2" stroke-width="8"/>
+    <path d="M520 500C520 483.431 538.225 473.352 552.235 482.197L721.086 588.771C734.162 597.026 734.162 616.036 721.086 624.291L552.235 730.865C538.225 739.71 520 729.631 520 713.062V500Z" fill="#888888"/>
+  </g>
+  <text x="600" y="930" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="92" font-weight="900" letter-spacing="-4" fill="#707070">VIDEO/RASM</text>
+</svg>

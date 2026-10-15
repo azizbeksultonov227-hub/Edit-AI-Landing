@@ -1,0 +1,196 @@
+@font-face {
+  font-display: swap;
+  font-family: "Gilroy Headline";
+  font-style: normal;
+  font-weight: 900;
+  src: local("Gilroy Black"), url("/fonts/Gilroy-Black.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Gilroy Headline";
+  font-style: normal;
+  font-weight: 800;
+  src: local("Gilroy Heavy"), url("/fonts/Gilroy-Heavy.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Gilroy Headline";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Gilroy Bold"), url("/fonts/Gilroy-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Fredoka Headline";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Fredoka Bold"), url("/fonts/Fredoka-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Jost";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Jost ExtraBold"), url("/fonts/Jost-ExtraBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  src: local("Inter Medium"), local("Jost Medium"), url("/fonts/Jost-Medium.ttf") format("truetype");
+}
+
+:root {
+  --ease-linear: cubic-bezier(.25,.25,.75,.75);
+  --ease-in-sine: cubic-bezier(.47,0,.745,.715);
+  --ease-out-sine: cubic-bezier(.39,.575,.565,1);
+  --ease-in-out-sine: cubic-bezier(.445,.05,.55,.95);
+  --ease-in-quad: cubic-bezier(.55,.085,.68,.53);
+  --ease-out-quad: cubic-bezier(.25,.46,.45,.94);
+  --ease-in-out-quad: cubic-bezier(.455,.03,.515,.955);
+  --ease-in-cubic: cubic-bezier(.55,.055,.675,.19);
+  --ease-out-cubic: cubic-bezier(.215,.61,.355,1);
+  --ease-in-out-cubic: cubic-bezier(.645,.045,.355,1);
+  --ease-in-quart: cubic-bezier(.895,.03,.685,.22);
+  --ease-out-quart: cubic-bezier(.165,.84,.44,1);
+  --ease-in-out-quart: cubic-bezier(.77,0,.175,1);
+  --ease-in-quint: cubic-bezier(.755,.05,.855,.06);
+  --ease-out-quint: cubic-bezier(.23,1,.32,1);
+  --ease-in-out-quint: cubic-bezier(.86,0,.07,1);
+  --ease-in-expo: cubic-bezier(.95,.05,.795,.035);
+  --ease-out-expo: cubic-bezier(.19,1,.22,1);
+  --ease-in-out-expo: cubic-bezier(1,0,0,1);
+  --ease-in-circ: cubic-bezier(.6,.04,.98,.335);
+  --ease-out-circ: cubic-bezier(.075,.82,.165,1);
+  --ease-in-out-circ: cubic-bezier(.785,.135,.15,.86);
+  --ease-in-back: cubic-bezier(.6,-.28,.735,.045);
+  --ease-out-back: cubic-bezier(.175,.885,.32,1.275);
+  --ease-in-out-back: cubic-bezier(.68,-.55,.265,1.55);
+  --ease-out-elastic: linear(0,.5737 7.6%,.8382 11.87%,.9463 14.19%,1.0292 16.54%,1.0886 18.97%,1.1258 21.53%,1.137 22.97%,1.1424 24.48%,1.1423 26.1%,1.1366 27.86%,1.1165 31.01%,1.0507 38.62%,1.0219 42.57%,.9995 46.99%,.9872 51.63%,.9842 58.77%,1.0011 81.26%,1);
+  --ease-out-elastic-100-30: linear(0,.2178 2.1%,1.1144 8.49%,1.2959 10.7%,1.3463 11.81%,1.3705 12.94%,1.3726,1.3643 14.48%,1.3151 16.2%,1.0317 21.81%,.941 24.01%,.8912 25.91%,.8694 27.84%,.8698 29.21%,.8824 30.71%,1.0122 38.33%,1.0357,1.046 42.71%,1.0416 45.7%,.9961 53.26%,.9839 57.54%,.9853 60.71%,1.0012 68.14%,1.0056 72.24%,.9981 86.66%,1);
+
+  --safe-top: env(safe-area-inset-top);
+  --safe-right: env(safe-area-inset-right);
+  --safe-bottom: env(safe-area-inset-bottom);
+  --safe-left: env(safe-area-inset-left);
+  --font-family-headline: "Gilroy Headline", "Fredoka Headline", "Jost", "Futura Now Headline", sans-serif;
+  --font-family-body: "Inter", sans-serif;
+  --headline-scale-x-original: 0.68;
+  --headline-stretch-original: 68%;
+  --headline-letter-spacing-original: -0.055em;
+  --headline-scale-x: 0.72;
+  --headline-stretch: 100%;
+  --headline-letter-spacing: -0.05em;
+  --padding: 1rem;
+  --gap: 1rem;
+  --max-width: 860px;
+  --shadow: 0px 9px 21px rgba(0,0,0,.1), 0px 38px 38px rgba(0,0,0,.09), 0px 85px 51px rgba(0,0,0,.05);
+  --color-white: #fff;
+  --color-black: #2c2c2c;
+  --color-grey: #cbcbcb;
+  --color-primary: var(--color-white);
+  --color-onPrimary: var(--color-black);
+  --color-secondary: var(--color-grey);
+  --color-onSecondary: var(--color-black);
+  --font-h1: 900 4.125rem / .8 var(--font-family-headline);
+  --font-h2: 900 2.5rem / .82 var(--font-family-headline);
+  --font-h4: 800 .875rem / 1 var(--font-family-headline);
+  --font-h6: 500 .5625rem / 1 var(--font-family-body);
+  --font-body: 500 1rem / 1.3 var(--font-family-body);
+}
+
+@media (width >= 768px) {
+  :root {
+    --font-h1: 900 6.25rem / .8 var(--font-family-headline);
+    --font-h2: 900 4rem / .82 var(--font-family-headline);
+    --font-h4: 800 .875rem / 1 var(--font-family-headline);
+    --font-h6: 500 .5625rem / 1 var(--font-family-body);
+    --font-body: 500 1rem / 1.3 var(--font-family-body);
+  }
+}
+
+*, :after, :before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  background-color: var(--color-primary);
+  color: var(--color-onPrimary);
+  font-family: var(--font-family-headline);
+  line-sizing: normal;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--color-primary);
+  margin: 0;
+  min-height: 100dvh;
+  overflow-x: clip;
+  width: 100%;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--color-secondary), transparent 60%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+h1 {
+  font: var(--font-h1);
+  font-feature-settings: "cpsp" on;
+}
+
+h1,
+h2 {
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+h2 {
+  font: var(--font-h2);
+  font-feature-settings: "cpsp" on;
+}
+
+h4 {
+  font: var(--font-h4);
+  font-feature-settings: "cpsp" on;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+p {
+  font: var(--font-body);
+}
+
+small {
+  font: var(--font-h6);
+  font-feature-settings: "cpsp" on;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+img,
+video {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
