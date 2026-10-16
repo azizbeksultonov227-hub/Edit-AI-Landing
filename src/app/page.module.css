@@ -257,6 +257,29 @@
   translate: -50% 0;
 }
 
+.heroPrice[data-icon] {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.36em;
+  text-transform: none;
+}
+
+.heroPriceIcon {
+  block-size: 1.15em;
+  flex: none;
+  inline-size: 1.15em;
+}
+
+.heroImages .heroImage.heroImageTall .heroPrice {
+  --price-x: 0%;
+}
+
+.heroImageTall,
+.heroImageTall .shadow,
+.heroImageTall .img {
+  aspect-ratio: 3 / 4;
+}
+
 .heroCta {
   --button-bg: var(--color-onPrimary);
   --button-color: var(--color-primary);
