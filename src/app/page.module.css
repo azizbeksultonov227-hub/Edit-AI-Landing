@@ -900,6 +900,12 @@ video.carouselImage {
   letter-spacing: -0.055em;
 }
 
+@media (width < 1024px) {
+  .footerTitleLineSmall {
+    font-size: min(16cqi, 10dvh);
+  }
+}
+
 .footerCta {
   --button-bg: var(--color-primary);
   --button-color: var(--color-onPrimary);

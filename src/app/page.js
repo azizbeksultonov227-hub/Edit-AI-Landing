@@ -587,33 +587,40 @@ function Footer({ footerRef, footerElementRef, titleRef }) {
   const year = new Date().getFullYear();
   const footerTitleLines = [
     {
-      key: "desktop-earning",
-      tone: "small",
+      key: "desktop-ai",
       visibilityClass: styles.footerTitleDesktopOnly,
       content: (
         <>
-          Birinchi <span className={styles.footerAmountAccent}>500$</span> ishlab topish
+          <span className={styles.footerAmountAccent}>AI</span> bilan videomontaj
         </>
       ),
     },
     {
-      key: "mobile-earning-start",
-      tone: "small",
+      key: "desktop-weeks",
+      visibilityClass: styles.footerTitleDesktopOnly,
+      content: (
+        <>
+          qilishni <span className={styles.footerAmountAccent}>3 haftada</span>
+        </>
+      ),
+    },
+    {
+      key: "mobile-ai",
       visibilityClass: styles.footerTitleMobileOnly,
       content: (
         <>
-          Birinchi <span className={styles.footerAmountAccent}>500$</span>
+          <span className={styles.footerAmountAccent}>AI</span> bilan
         </>
       ),
     },
+    { key: "mobile-montage", visibilityClass: styles.footerTitleMobileOnly, text: "videomontaj" },
+    { key: "mobile-doing", visibilityClass: styles.footerTitleMobileOnly, text: "qilishni" },
     {
-      key: "mobile-earning-end",
-      tone: "small",
+      key: "mobile-weeks",
       visibilityClass: styles.footerTitleMobileOnly,
-      content: "ishlab topish",
+      content: <span className={styles.footerAmountAccent}>3 haftada</span>,
     },
-    { key: "roadmap", text: "Yo‘l xaritasini", tone: "small" },
-    { key: "cta", text: "oling", tone: "large" },
+    { key: "teach", text: "o‘rgatamiz!" },
   ];
 
   return (
