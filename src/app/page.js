@@ -575,7 +575,7 @@ function Footer({ footerRef, footerElementRef, titleRef }) {
           ))}
         </p>
         <a href="https://telegram.dog/editmaktab500bot?start=auto" target="_blank" rel="noopener noreferrer" className={`${styles.ctaButton} ${styles.footerCta}`}>
-          YO‘L XARITASINI OLISH
+          BOSHLASH
         </a>
         <small className={styles.footerSubtitle}>All rights reserved {year} EditMaktab</small>
       </footer>
@@ -597,14 +597,14 @@ export default function Home({ initialSlug = null } = {}) {
   const [activeSlug, setActiveSlug] = useState(initialSlug);
   const activeProject = useMemo(() => findProjectBySlug(activeSlug), [activeSlug]);
 
-  const titleWords = useMemo(() => splitWords("Videomontaj — 90 kunda"), []);
+  const titleWords = useMemo(() => splitWords("Sun’iy intellekt kursi"), []);
   const subtitleLines = useMemo(
     () => [
-      { key: "desktop-earning", visibilityClass: styles.subtitleDesktopOnly, words: splitWords("Birinchi $500 ishlab topish") },
-      { key: "desktop-roadmap", visibilityClass: styles.subtitleDesktopOnly, words: splitWords("Yo‘l xaritasini oling") },
-      { key: "compact-earning-start", visibilityClass: styles.subtitleCompactOnly, words: splitWords("Birinchi $500") },
-      { key: "compact-earning-end", visibilityClass: styles.subtitleCompactOnly, words: splitWords("ishlab topish") },
-      { key: "compact-roadmap", visibilityClass: styles.subtitleCompactOnly, words: splitWords("Yo‘l xaritasini oling") },
+      { key: "desktop-idea", visibilityClass: styles.subtitleDesktopOnly, words: splitWords("Istalgan g‘oyani AI bilan") },
+      { key: "desktop-reality", visibilityClass: styles.subtitleDesktopOnly, words: splitWords("haqiqatga aylantiring") },
+      { key: "compact-idea", visibilityClass: styles.subtitleCompactOnly, words: splitWords("Istalgan g‘oyani") },
+      { key: "compact-ai", visibilityClass: styles.subtitleCompactOnly, words: splitWords("AI bilan") },
+      { key: "compact-reality", visibilityClass: styles.subtitleCompactOnly, words: splitWords("haqiqatga aylantiring") },
     ],
     []
   );
@@ -794,7 +794,7 @@ export default function Home({ initialSlug = null } = {}) {
       <main className={styles.main}>
         <div ref={heroRef} className={`${styles.hero} ${mounted ? styles.mounted : ""}`} data-mounted={mounted}>
           <div className={styles.heroMid}>
-            <h1 className={`${styles.title} ${styles.headlineCondensed}`} aria-label="Videomontaj — 90 kunda">
+            <h1 className={`${styles.title} ${styles.headlineCondensed}`} aria-label="Sun’iy intellekt kursi">
               <span className={styles.titleLine}>
                 {titleWords.map(({ word, hasSpace }, index) => (
                   <span key={word}>
@@ -835,7 +835,7 @@ export default function Home({ initialSlug = null } = {}) {
               ))}
             </div>
 
-            <h2 className={`${styles.subtitle} ${styles.headlineCondensed}`} aria-label="Birinchi $500 ishlab topish. Yo‘l xaritasini oling">
+            <h2 className={`${styles.subtitle} ${styles.headlineCondensed}`} aria-label="Istalgan g‘oyani AI bilan haqiqatga aylantiring">
               {subtitleLines.map((line, lineIndex) => (
                 <span key={line.key} className={`${styles.subtitleLine} ${line.visibilityClass}`}>
                   {line.words.map(({ word, hasSpace }, wordIndex) => {
@@ -866,7 +866,7 @@ export default function Home({ initialSlug = null } = {}) {
             </h2>
 
             <a href="https://telegram.dog/editmaktab500bot?start=auto" target="_blank" rel="noopener noreferrer" className={`${styles.ctaButton} ${styles.heroCta}`}>
-              YO‘L XARITASINI OLISH
+              BOSHLASH
             </a>
           </div>
         </div>
