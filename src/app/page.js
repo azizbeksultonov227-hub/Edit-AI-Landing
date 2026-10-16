@@ -205,6 +205,38 @@ function ClaudeIcon() {
   );
 }
 
+// Swap for the official Higgsfield logo once it is added to /public
+function HiggsfieldIcon() {
+  return <span className={styles.heroPriceWordmark}>Higgsfield</span>;
+}
+
+const heroIcons = { claude: ClaudeIcon, higgsfield: HiggsfieldIcon };
+
+function HeroLabel({ card }) {
+  if (card.icons?.length) {
+    return (
+      <span className={styles.heroPrice} data-icon="" aria-label={card.price}>
+        {card.icons.map((name, index) => {
+          const Icon = heroIcons[name];
+          return (
+            <span key={name} className={styles.heroPriceGroup}>
+              {index > 0 && <span className={styles.heroPricePlus} aria-hidden="true">+</span>}
+              <Icon />
+            </span>
+          );
+        })}
+      </span>
+    );
+  }
+
+  return (
+    <span className={styles.heroPrice} data-icon={card.icon ? "" : undefined}>
+      {card.icon === "claude" && <ClaudeIcon />}
+      {card.price}
+    </span>
+  );
+}
+
 function TextBlock({ title, description }) {
   return (
     <div className={styles.textBlock}>
@@ -831,10 +863,7 @@ export default function Home({ initialSlug = null } = {}) {
                   }}
                 >
                   <div className={styles.shadow} />
-                  <span className={styles.heroPrice} data-icon={card.icon ? "" : undefined}>
-                    {card.icon === "claude" && <ClaudeIcon />}
-                    {card.price}
-                  </span>
+                  <HeroLabel card={card} />
                   <MediaVisual
                     src={card.src}
                     width={400}

@@ -270,8 +270,37 @@
   inline-size: 1.15em;
 }
 
+.heroPriceGroup {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.36em;
+}
+
+.heroPricePlus {
+  opacity: 0.6;
+}
+
+.heroPriceWordmark {
+  white-space: nowrap;
+}
+
 .heroImages .heroImage.heroImageTall .heroPrice {
   --price-x: 0%;
+}
+
+.heroImages .heroImage.heroImageTall:nth-child(3) .heroPrice {
+  --price-bg: #fff;
+  --price-fg: #111;
+  --price-x: -30%;
+}
+
+.heroImages .heroImage.heroImageTall:nth-child(4) .heroPrice {
+  --price-x: 12%;
+}
+
+/* Cards rotate every descendant; keep label contents upright inside the label */
+.heroImages .heroImage .heroPrice * {
+  rotate: none;
 }
 
 .heroImageTall,
