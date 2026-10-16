@@ -205,9 +205,8 @@ function ClaudeIcon() {
   );
 }
 
-// Swap for the official Higgsfield logo once it is added to /public
 function HiggsfieldIcon() {
-  return <span className={styles.heroPriceWordmark}>Higgsfield</span>;
+  return <Image className={`${styles.heroPriceIcon} ${styles.heroPriceLogo}`} src="/icons/higgsfield.png" alt="Higgsfield" width={96} height={96} unoptimized />;
 }
 
 const heroIcons = { claude: ClaudeIcon, higgsfield: HiggsfieldIcon };

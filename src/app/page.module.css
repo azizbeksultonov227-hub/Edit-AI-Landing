@@ -280,8 +280,8 @@
   opacity: 0.6;
 }
 
-.heroPriceWordmark {
-  white-space: nowrap;
+.heroPriceLogo {
+  border-radius: 0.28em;
 }
 
 .heroImages .heroImage.heroImageTall .heroPrice {
@@ -291,7 +291,7 @@
 .heroImages .heroImage.heroImageTall:nth-child(3) .heroPrice {
   --price-bg: #fff;
   --price-fg: #111;
-  --price-x: -30%;
+  --price-x: 0%;
 }
 
 .heroImages .heroImage.heroImageTall:nth-child(4) .heroPrice {
