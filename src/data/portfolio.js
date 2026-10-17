@@ -21,6 +21,10 @@ const videoDimensions = {
   "student-target-offline-02.mp4": { width: 406, height: 720 },
   "target-edit.mp4": { width: 406, height: 720 },
   "vid-13.mp4": { width: 406, height: 720 },
+  "claude-higgsfield.mp4": { width: 406, height: 720 },
+  "higgsfield-google.mp4": { width: 962, height: 540 },
+  "ey-montajor.mp4": { width: 406, height: 720 },
+  "claude-ai.mp4": { width: 406, height: 720 },
 };
 
 const byId = (ids) => ids.map((id) => projectsById[id]);
@@ -38,6 +42,42 @@ const previewItem = (project, index = 0) => ({
 });
 
 export const projects = [
+  {
+    id: "ai-claude-higgsfield",
+    title: "Claude + Higgsfield",
+    slug: "claude-higgsfield",
+    file: "claude-higgsfield.mp4",
+    tools: ["claude", "higgsfield"],
+    detailTitle: "AI video",
+    detailDescription: "Bu video Claude va Higgsfield yordamida tayyorlandi.",
+  },
+  {
+    id: "ai-google-premiere",
+    title: "Google + Premiere Pro",
+    slug: "google-premiere",
+    file: "higgsfield-google.mp4",
+    tools: ["google", "premiere"],
+    detailTitle: "AI video",
+    detailDescription: "Bu video Google AI va Premiere Pro yordamida tayyorlandi.",
+  },
+  {
+    id: "ai-higgsfield-claude",
+    title: "Higgsfield + Claude",
+    slug: "higgsfield-claude",
+    file: "ey-montajor.mp4",
+    tools: ["higgsfield", "claude"],
+    detailTitle: "AI video",
+    detailDescription: "Bu video Higgsfield va Claude yordamida tayyorlandi.",
+  },
+  {
+    id: "ai-claude",
+    title: "Claude AI",
+    slug: "claude-ai",
+    file: "claude-ai.mp4",
+    tools: ["claude"],
+    detailTitle: "AI video",
+    detailDescription: "Bu video Claude yordamida tayyorlandi.",
+  },
   {
     id: "editmaktab-trailer",
     title: "Kurs treyler",
@@ -227,23 +267,15 @@ export const projects = [
 export const projectsById = Object.fromEntries(projects.map((project) => [project.id, project]));
 
 const heroCardRefs = [
-  { id: "sound-design", price: "Claude + Higgsfield", icons: ["claude", "higgsfield"], tall: true, src: preview("claude-higgsfield.mp4"), width: 406, height: 720, offsetX: -1.8695365143659899, offsetY: -97.68473608687236 },
-  { id: "editmaktab-trailer", price: "Google + Premiere Pro", icons: ["google", "premiere"], tall: true, src: preview("higgsfield-google.mp4"), width: 962, height: 540, offsetX: 33.90594592243076, offsetY: 3.8751517335709877 },
-  { id: "student-shorts-01", price: "Higgsfield + Claude", icons: ["higgsfield", "claude"], tall: true, src: preview("ey-montajor.mp4"), width: 406, height: 720, offsetX: 51.98238723063463, offsetY: -40.950202373664354 },
-  { id: "mentor-final-04", price: "Claude AI", icons: ["claude"], tall: true, src: preview("claude-ai.mp4"), width: 406, height: 720, offsetX: -83.38627267497687, offsetY: 11.734583852847663 },
+  { id: "ai-claude-higgsfield", offsetX: -1.8695365143659899, offsetY: -97.68473608687236 },
+  { id: "ai-google-premiere", offsetX: 33.90594592243076, offsetY: 3.8751517335709877 },
+  { id: "ai-higgsfield-claude", offsetX: 51.98238723063463, offsetY: -40.950202373664354 },
+  { id: "ai-claude", offsetX: -83.38627267497687, offsetY: 11.734583852847663 },
 ];
 
 export const sectionProjectIds = {
   heroCards: heroCardRefs.map((item) => item.id),
-  featuredWork: [
-    "mentor-final-04",
-    "student-reels-01",
-    "student-shorts-01",
-    "youtube-intro",
-    "editmaktab-trailer",
-    "sound-design",
-    "brand-video",
-  ],
+  featuredWork: ["ai-claude-higgsfield", "ai-google-premiere", "ai-higgsfield-claude", "ai-claude"],
   moreWork: [
     "youtube-intro",
     "student-shorts-01",
@@ -265,19 +297,20 @@ export const sectionProjectIds = {
   ],
 };
 
-export const heroCards = heroCardRefs.map(({ id, price, icons, tall = false, src, width, height, offsetX, offsetY }) => ({
-  price,
-  icons,
-  tall,
-  src: src ?? projectsById[id].preview,
-  width: width ?? projectsById[id].width,
-  height: height ?? projectsById[id].height,
+export const heroCards = heroCardRefs.map(({ id, offsetX, offsetY }) => ({
+  price: projectsById[id].title,
+  icons: projectsById[id].tools,
+  tall: true,
+  src: projectsById[id].preview,
+  width: projectsById[id].width,
+  height: projectsById[id].height,
   offsetX,
   offsetY,
 }));
 
 export const featuredWork = byId(sectionProjectIds.featuredWork).map((project) => ({
   title: project.title,
+  tools: project.tools,
   href: project.href,
   src: project.preview,
   width: project.width,

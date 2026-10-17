@@ -601,86 +601,98 @@
   scale: 1;
 }
 
-.carousel {
-  --gap: var(--carousel-gap);
-  cursor: grab;
-  height: 100%;
-  overflow-x: clip;
-  touch-action: pan-y;
+/* AI reels: four 9:16 clips set close together, a light stagger echoing the hero cards */
+.reels {
+  --reel-radius: clamp(1rem, 1.6vw, 1.5rem);
+  --reel-stagger: clamp(1.25rem, 3vw, 2.75rem);
+  display: grid;
+  gap: clamp(0.75rem, 1.4vw, 1.25rem);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 auto;
+  max-width: 64rem;
+  padding: 0 max(var(--padding), 2rem) var(--reel-stagger);
   width: 100%;
 }
 
-.carousel:active {
-  cursor: grabbing;
-}
-
-.carouselTrack {
-  --offset: var(--carousel-offset);
-  --pointerXOffset: 0;
-  --pointerOffset: calc(var(--pointerXOffset) * 50);
-  --offset-centered: (var(--offset) + var(--pointerOffset)) - var(--center-padding);
+.reel {
   align-items: center;
-  display: flex;
-  gap: calc(var(--gap) * 1px);
-  height: 100%;
-  translate: calc((var(--offset) + var(--pointerOffset)) * -1px) 0;
-  width: fit-content;
-}
-
-.carouselSlide {
-  --slide-pos: calc((var(--slide-width) + var(--gap)) * var(--slide-idx) + var(--slide-offset));
-  --transform: calc(var(--slide-pos) - var(--offset-centered));
-  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  height: 100%;
-  justify-content: center;
-  translate: calc(var(--slide-offset) * 1px);
-  width: min(30rem, 80vw);
+  gap: 0.9rem;
+  min-width: 0;
+  padding: 0;
 }
 
-.carouselMediaClip {
-  --carousel-media-radius: clamp(1.2rem, 2.2vw, 2rem);
-  --carousel-media-max-height: 100%;
-  aspect-ratio: 1 / 1;
-  display: grid;
-  flex: 0 0 auto;
-  font-size: 0;
-  inline-size: min(30rem, 80vw);
-  line-height: 0;
-  max-block-size: 100%;
-  max-inline-size: 100%;
-  place-items: center;
+.reel:nth-child(even) {
+  translate: 0 var(--reel-stagger);
 }
 
-.carouselImage {
-  border-radius: var(--carousel-media-radius);
-  clip-path: inset(0 round var(--carousel-media-radius));
+.reel:focus {
+  outline: none;
+}
+
+.reel:focus-visible .reelMedia {
+  outline: 0.16rem solid rgba(44, 44, 44, 0.28);
+  outline-offset: 0.35rem;
+}
+
+.reelMedia {
+  aspect-ratio: 9 / 16;
+  background: #f2f2f2;
+  border-radius: var(--reel-radius);
+  box-shadow: 0 9px 21px rgba(0, 0, 0, 0.05), 0 38px 38px rgba(0, 0, 0, 0.045);
   display: block;
-  height: auto;
-  max-height: var(--carousel-media-max-height, 100%);
-  max-width: 100%;
   overflow: clip;
-  transition: 1.4s translate var(--ease-out-elastic), 1.4s scale var(--ease-out-elastic);
-  transition-delay: calc(sin(var(--slide-idx) * (3.14 / 2)) * 0.12s);
-  user-select: none;
-  width: auto;
+  transition: 0.8s scale var(--ease-out-elastic), 0.8s box-shadow var(--ease-out-elastic);
+  width: 100%;
 }
 
-.carouselSlide a {
-  opacity: cos(var(--transform) * (3.14 / 600));
+@media (any-hover: hover) {
+  .reel:hover .reelMedia {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08), 0 48px 48px rgba(0, 0, 0, 0.06);
+    scale: 1.03;
+  }
 }
 
-.carouselCurve .carouselSlide {
-  rotate: calc(var(--transform) * 0.03deg);
-  transform-origin: 50% 70vw;
-  translate: calc(var(--slide-offset) * 1px) calc(cos(var(--transform) * (3.14 / 1000)) * -3rem + 3rem);
+.reel:active .reelMedia {
+  scale: 0.97;
 }
 
-.carousel[data-inview="false"] .carouselImage {
-  scale: 0.8;
-  translate: 0 20%;
+.reelVideo {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.reelTag {
+  align-items: center;
+  background: #fff;
+  border-radius: 999rem;
+  box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.08);
+  display: inline-flex;
+  font: var(--font-h4);
+  font-size: max(0.72rem, 0.9vw);
+  gap: 0.36em;
+  line-height: 1;
+  padding: 0.55em 0.8em;
+}
+
+@media (width < 768px) {
+  .reels {
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 28rem;
+    padding-inline: max(var(--padding), 1.25rem);
+  }
+
+  .reelTag {
+    font-size: 0.8rem;
+  }
 }
 
 .grid {
@@ -769,20 +781,6 @@ video.img {
   height: 100%;
   object-fit: cover;
   width: 100%;
-}
-
-video.carouselImage {
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
-  border-radius: var(--carousel-media-radius, clamp(1.2rem, 2.2vw, 2rem));
-  clip-path: inset(0 round var(--carousel-media-radius, clamp(1.2rem, 2.2vw, 2rem)));
-  display: block;
-  height: auto;
-  max-height: var(--carousel-media-max-height, 100%);
-  max-width: 100%;
-  object-fit: contain;
-  overflow: hidden;
-  transform: translateZ(0);
-  width: auto;
 }
 
 .projectShadow {

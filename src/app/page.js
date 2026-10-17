@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
 import { featuredWork, heroCards, moreWork, projectDescriptions } from "../data/portfolio";
@@ -231,26 +231,28 @@ function PremiereProIcon() {
 
 const heroIcons = { claude: ClaudeIcon, google: GoogleIcon, higgsfield: HiggsfieldIcon, premiere: PremiereProIcon };
 
+function ToolIcons({ tools }) {
+  return tools.map((name, index) => {
+    const Icon = heroIcons[name];
+    return (
+      <span key={name} className={styles.heroPriceGroup}>
+        {index > 0 && <span className={styles.heroPricePlus} aria-hidden="true">+</span>}
+        <Icon />
+      </span>
+    );
+  });
+}
+
 function HeroLabel({ card }) {
   if (card.icons?.length) {
     return (
       <span className={styles.heroPrice} data-icon="" aria-label={card.price}>
-        {card.icons.map((name, index) => {
-          const Icon = heroIcons[name];
-          return (
-            <span key={name} className={styles.heroPriceGroup}>
-              {index > 0 && <span className={styles.heroPricePlus} aria-hidden="true">+</span>}
-              <Icon />
-            </span>
-          );
-        })}
+        <ToolIcons tools={card.icons} />
       </span>
     );
   }
 
-  return (
-    <span className={styles.heroPrice}>{card.price}</span>
-  );
+  return <span className={styles.heroPrice}>{card.price}</span>;
 }
 
 function TextBlock({ title, description }) {
@@ -262,209 +264,19 @@ function TextBlock({ title, description }) {
   );
 }
 
-function FeaturedCarousel({ openProject }) {
-  const rootRef = useRef(null);
-  const trackRef = useRef(null);
-  const slideMetrics = useRef({ rootWidth: 300, slideWidth: 100, step: 116, totalWidth: featuredWork.length * 116 });
-  const slides = useRef(featuredWork.map((item, index) => ({ item, originalOffset: index * 116, offset: 0 })));
-  const pointer = useRef({ isDown: false, didDrag: false, x: 0, y: 0, movementX: 0, startX: 0, startY: 0, startTime: 0 });
-  const velocityRef = useRef(0);
-  const offsetRef = useRef(0);
-  const didInitCarousel = useRef(false);
-  const frameRef = useRef(0);
-  const [state, setState] = useState({ offset: 0, slideOffsets: featuredWork.map(() => 0), slideWidth: 100, centerPadding: 100 });
-  const inView = useInView(rootRef, 0);
-
-  useLayoutEffect(() => {
-    const root = rootRef.current;
-    const track = trackRef.current;
-    if (!root || !track) return;
-
-    const updateMetrics = () => {
-      const firstSlide = track.children[0];
-      const slideWidth = firstSlide ? firstSlide.clientWidth : 100;
-      const rootWidth = root.clientWidth || 300;
-      const step = slideWidth + 16;
-      const totalWidth = Math.max(step * featuredWork.length, step);
-      const previousMetrics = slideMetrics.current;
-      const previousCenterPadding = (previousMetrics.rootWidth - previousMetrics.slideWidth) * 0.5;
-      const centerPadding = (rootWidth - slideWidth) * 0.5;
-
-      if (!didInitCarousel.current) {
-        offsetRef.current = -centerPadding;
-        didInitCarousel.current = true;
-      } else if (previousMetrics.step) {
-        const centeredIndex = Math.round((offsetRef.current + previousCenterPadding) / previousMetrics.step);
-        offsetRef.current = centeredIndex * step - centerPadding;
-      }
-
-      slideMetrics.current = { rootWidth, slideWidth, step, totalWidth };
-      slides.current.forEach((slide, index) => {
-        slide.originalOffset = step * index;
-      });
-
-      const centerOffset = offsetRef.current + centerPadding;
-      const nextSlideOffsets = slides.current.map((slide) => {
-        const wrapOffset = Math.round((centerOffset - slide.originalOffset) / totalWidth) * totalWidth;
-        slide.offset = Number.isFinite(wrapOffset) ? wrapOffset : 0;
-        return slide.offset;
-      });
-
-      setState({
-        offset: offsetRef.current,
-        slideOffsets: nextSlideOffsets,
-        slideWidth,
-        centerPadding,
-      });
-    };
-
-    updateMetrics();
-    const resizeObserver = new ResizeObserver(updateMetrics);
-    resizeObserver.observe(root);
-    resizeObserver.observe(track);
-    window.addEventListener("resize", updateMetrics);
-
-    return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener("resize", updateMetrics);
-    };
-  }, []);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root || !inView) return;
-
-    const animate = () => {
-      const metrics = slideMetrics.current;
-      const pointerState = pointer.current;
-
-      if (pointerState.isDown) velocityRef.current = pointerState.movementX;
-
-      velocityRef.current *= 0.85;
-      offsetRef.current -= velocityRef.current;
-
-      const centerOffset = offsetRef.current + (metrics.rootWidth - metrics.slideWidth) * 0.5;
-      const nextSlideOffsets = slides.current.map((slide) => {
-        const wrapOffset = Math.round((centerOffset - slide.originalOffset) / metrics.totalWidth) * metrics.totalWidth;
-        slide.offset = Number.isFinite(wrapOffset) ? wrapOffset : 0;
-        return slide.offset;
-      });
-
-      setState({
-        offset: offsetRef.current,
-        slideOffsets: nextSlideOffsets,
-        slideWidth: metrics.slideWidth,
-        centerPadding: (metrics.rootWidth - metrics.slideWidth) * 0.5,
-      });
-
-      pointerState.movementX = 0;
-      frameRef.current = window.requestAnimationFrame(animate);
-    };
-
-    frameRef.current = window.requestAnimationFrame(animate);
-    return () => window.cancelAnimationFrame(frameRef.current);
-  }, [inView]);
-
-  const settle = () => {
-    const metrics = slideMetrics.current;
-    const centerPadding = (metrics.rootWidth - metrics.slideWidth) * 0.5;
-    velocityRef.current *= 2;
-    const projected = offsetRef.current + centerPadding - (velocityRef.current * 0.85) / (1 - 0.85);
-    const target = Math.round(projected / metrics.step) * metrics.step - centerPadding;
-    velocityRef.current = (target - offsetRef.current) * (1 - 0.85) * (1 / 0.85) * -1;
-  };
-
-  const nudge = (direction) => {
-    const metrics = slideMetrics.current;
-    const centerPadding = (metrics.rootWidth - metrics.slideWidth) * 0.5;
-    const target = (Math.round((offsetRef.current + centerPadding) / metrics.step) + direction) * metrics.step - centerPadding;
-    velocityRef.current = (target - offsetRef.current) * (1 - 0.85) * (1 / 0.85) * -1;
-  };
-
-  const onPointerDown = (event) => {
-    event.currentTarget.setPointerCapture?.(event.pointerId);
-    pointer.current.isDown = true;
-    pointer.current.didDrag = false;
-    pointer.current.x = event.clientX;
-    pointer.current.y = event.clientY;
-    pointer.current.startX = event.clientX;
-    pointer.current.startY = event.clientY;
-    pointer.current.startTime = performance.now();
-    pointer.current.movementX = 0;
-  };
-
-  const onPointerMove = (event) => {
-    if (!pointer.current.isDown) return;
-    const movementX = event.clientX - pointer.current.x;
-    const totalMove = Math.hypot(event.clientX - pointer.current.startX, event.clientY - pointer.current.startY);
-    pointer.current.movementX = movementX;
-    pointer.current.didDrag = pointer.current.didDrag || totalMove > 8;
-    pointer.current.x = event.clientX;
-    pointer.current.y = event.clientY;
-  };
-
-  const onPointerUp = (event) => {
-    if (!pointer.current.isDown) return;
-    pointer.current.isDown = false;
-    const elapsed = performance.now() - pointer.current.startTime;
-    const moved = Math.hypot(event.clientX - pointer.current.startX, event.clientY - pointer.current.startY);
-
-    event.currentTarget.releasePointerCapture?.(event.pointerId);
-
-    if (elapsed < 100 && moved < 10) {
-      const width = window.innerWidth;
-      const direction = event.clientX > width * 0.75 ? 1 : event.clientX < width * 0.25 ? -1 : 0;
-      nudge(direction);
-      return;
-    }
-
-    settle();
-  };
-
+function AiReels({ openProject }) {
   return (
-    <div
-      ref={rootRef}
-      className={`${styles.carousel} ${styles.carouselCurve}`}
-      data-inview={inView}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerUp}
-      style={{
-        "--carousel-gap": 16,
-        "--carousel-offset": state.offset,
-        "--slide-width": state.slideWidth,
-        "--center-padding": state.centerPadding,
-      }}
-    >
-      <div ref={trackRef} className={styles.carouselTrack}>
-        {featuredWork.map((item, index) => (
-          <div
-            key={item.href}
-            className={styles.carouselSlide}
-            style={{ "--slide-offset": state.slideOffsets[index] ?? 0, "--slide-idx": index }}
-          >
-            <span className={styles.carouselMediaClip}>
-              <MediaVisual
-                src={item.src}
-                width={item.width ?? imageDimensions(item.src, 720).width}
-                height={item.height ?? imageDimensions(item.src, 720).height}
-                className={styles.carouselImage}
-              />
-            </span>
-            <button
-              type="button"
-              className={styles.button}
-              onClick={() => {
-                if (pointer.current.didDrag) return;
-                openProject(item.href);
-              }}
-            >
-              {item.title}
-            </button>
-          </div>
-        ))}
-      </div>
+    <div className={styles.reels}>
+      {featuredWork.map((item) => (
+        <button key={item.href} type="button" className={styles.reel} onClick={() => openProject(item.href)} aria-label={item.title}>
+          <span className={styles.reelMedia}>
+            <MediaVisual src={item.src} width={item.width} height={item.height} className={styles.reelVideo} />
+          </span>
+          <span className={styles.reelTag}>
+            <ToolIcons tools={item.tools} />
+          </span>
+        </button>
+      ))}
     </div>
   );
 }
@@ -937,7 +749,7 @@ export default function Home({ initialSlug = null } = {}) {
         <div className={styles.indexPageSection}>
           <section id="roadmap" className={styles.indexPageProject}>
             <TextBlock title="AI da tayyorlangan videolar" description="Shunday ishlarni qila olasiz!" />
-            <FeaturedCarousel openProject={openProject} />
+            <AiReels openProject={openProject} />
           </section>
 
           <section className={styles.indexPageProject}>
