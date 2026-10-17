@@ -227,7 +227,7 @@ export const projects = [
 export const projectsById = Object.fromEntries(projects.map((project) => [project.id, project]));
 
 const heroCardRefs = [
-  { id: "sound-design", price: "$40", offsetX: -1.8695365143659899, offsetY: -97.68473608687236 },
+  { id: "sound-design", price: "Claude + Higgsfield", icons: ["claude", "higgsfield"], tall: true, src: preview("claude-higgsfield.mp4"), width: 406, height: 720, offsetX: -1.8695365143659899, offsetY: -97.68473608687236 },
   { id: "editmaktab-trailer", price: "Google + Premiere Pro", icons: ["google", "premiere"], tall: true, src: preview("higgsfield-google.mp4"), width: 962, height: 540, offsetX: 33.90594592243076, offsetY: 3.8751517335709877 },
   { id: "student-shorts-01", price: "Higgsfield + Claude", icons: ["higgsfield", "claude"], tall: true, src: preview("ey-montajor.mp4"), width: 406, height: 720, offsetX: 51.98238723063463, offsetY: -40.950202373664354 },
   { id: "mentor-final-04", price: "Claude AI", icons: ["claude"], tall: true, src: preview("claude-ai.mp4"), width: 406, height: 720, offsetX: -83.38627267497687, offsetY: 11.734583852847663 },
