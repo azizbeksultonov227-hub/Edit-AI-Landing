@@ -259,7 +259,7 @@ function TextBlock({ title, description, large = false }) {
   return (
     <div className={styles.textBlock}>
       <h4 className={`${styles.textBlockTitle} ${large ? styles.textBlockTitleLarge : ""}`}>{title}</h4>
-      <p className={styles.textBlockDescription}>{description}</p>
+      {description && <p className={styles.textBlockDescription}>{description}</p>}
     </div>
   );
 }
@@ -931,7 +931,7 @@ export default function Home({ initialSlug = null } = {}) {
 
         <div className={styles.indexPageSection}>
           <section id="roadmap" className={styles.indexPageProject}>
-            <TextBlock title="AI da tayyorlangan videolar" description="Bir haftada shunday ishlarni qila olasiz!" large />
+            <TextBlock title="AI da tayyorlangan videolar" large />
             <AiReels />
           </section>
 
