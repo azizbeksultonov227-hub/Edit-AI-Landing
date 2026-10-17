@@ -264,7 +264,9 @@ function TextBlock({ title, description, large = false }) {
   );
 }
 
-const REEL_SETS = 4;
+// Even count per set keeps the zigzag aligned when the loop wraps
+const reelSet = featuredWork.length % 2 ? [...featuredWork, ...featuredWork] : featuredWork;
+const REEL_SETS = reelSet.length >= 8 ? 2 : 4;
 const REEL_SPEED = 0.45; // px per 60fps frame, drifting left to right
 
 function AiReels() {
@@ -274,7 +276,7 @@ function AiReels() {
   const inView = useInView(rootRef, 0);
   const [active, setActive] = useState(null);
   const reels = useMemo(
-    () => Array.from({ length: REEL_SETS }, (_, set) => featuredWork.map((item, index) => ({ ...item, key: `${set}-${index}` }))).flat(),
+    () => Array.from({ length: REEL_SETS }, (_, set) => reelSet.map((item, index) => ({ ...item, key: `${set}-${index}` }))).flat(),
     []
   );
 
@@ -402,9 +404,11 @@ function AiReels() {
             >
               <MediaVisual src={reel.src} width={reel.width} height={reel.height} className={styles.reelVideo} />
             </span>
-            <span className={styles.reelTag}>
-              <ToolIcons tools={reel.tools} />
-            </span>
+            {reel.tools?.length > 0 && (
+              <span className={styles.reelTag}>
+                <ToolIcons tools={reel.tools} />
+              </span>
+            )}
           </button>
         ))}
       </div>

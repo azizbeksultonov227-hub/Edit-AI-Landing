@@ -25,6 +25,7 @@ const videoDimensions = {
   "higgsfield-google.mp4": { width: 962, height: 540 },
   "ey-montajor.mp4": { width: 406, height: 720 },
   "claude-ai.mp4": { width: 406, height: 720 },
+  "ai-video-05.mp4": { width: 960, height: 540 },
 };
 
 const byId = (ids) => ids.map((id) => projectsById[id]);
@@ -77,6 +78,15 @@ export const projects = [
     tools: ["claude"],
     detailTitle: "AI video",
     detailDescription: "Bu video Claude yordamida tayyorlandi.",
+  },
+  {
+    id: "ai-video-05",
+    title: "AI video",
+    slug: "ai-video-05",
+    file: "ai-video-05.mp4",
+    tools: [],
+    detailTitle: "AI video",
+    detailDescription: "Bu video sun’iy intellekt yordamida tayyorlandi.",
   },
   {
     id: "editmaktab-trailer",
@@ -275,7 +285,7 @@ const heroCardRefs = [
 
 export const sectionProjectIds = {
   heroCards: heroCardRefs.map((item) => item.id),
-  featuredWork: ["ai-claude-higgsfield", "ai-google-premiere", "ai-higgsfield-claude", "ai-claude"],
+  featuredWork: ["ai-claude-higgsfield", "ai-google-premiere", "ai-higgsfield-claude", "ai-claude", "ai-video-05"],
   moreWork: [
     "youtube-intro",
     "student-shorts-01",
