@@ -464,47 +464,6 @@ function ReelFocus({ active, close, onClosed }) {
   );
 }
 
-function ProjectCard({ project, openProject }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, 0);
-
-  const visibleItems = project.items.length > 1 ? project.items.slice(0, 2).reverse() : project.items.slice(0, 1);
-
-  return (
-    <button
-      type="button"
-      ref={ref}
-      onClick={() => openProject(project.href)}
-      className={styles.project}
-      aria-label={project.title}
-      data-inview={inView}
-      data-stack-count={Math.min(project.items.length, 2)}
-    >
-      {visibleItems.map((item, index) => (
-        <div
-          key={`${project.title}-${index}`}
-          className={styles.projectImage}
-          style={{
-            "--rotation": item.rotation,
-            "--posX": item.posX,
-            "--posY": item.posY,
-          }}
-        >
-          <div className={styles.projectMedia}>
-            <div className={styles.projectShadow} />
-            <MediaVisual
-              src={item.src}
-              width={item.width ?? imageDimensions(item.src).width}
-              height={item.height ?? imageDimensions(item.src).height}
-              className={styles.projectImg}
-            />
-          </div>
-        </div>
-      ))}
-    </button>
-  );
-}
-
 function ProjectPageOverlay({ project, closeProject }) {
   const titleWords = useMemo(() => splitWords(project?.title ?? ""), [project?.title]);
 
@@ -666,16 +625,6 @@ export default function Home({ initialSlug = null } = {}) {
     ],
     []
   );
-
-  const openProject = (href) => {
-    const slug = slugFromHref(href);
-    if (!findProjectBySlug(slug)) return;
-
-    setActiveSlug(slug);
-    if (window.location.pathname !== `/${slug}`) {
-      window.history.pushState({ projectModal: slug }, "", `/${slug}`);
-    }
-  };
 
   const closeProject = () => {
     setActiveSlug(null);
@@ -935,14 +884,6 @@ export default function Home({ initialSlug = null } = {}) {
             <AiReels />
           </section>
 
-          <section className={styles.indexPageProject}>
-            <TextBlock title="Talabalar ishlari" description="Bu buyurtmalar uchun $30-$100 to‘lanadi" />
-            <div className={styles.grid}>
-              {moreWork.map((project) => (
-                <ProjectCard key={project.href} project={project} openProject={openProject} />
-              ))}
-            </div>
-          </section>
         </div>
       </main>
 
