@@ -255,28 +255,207 @@ function HeroLabel({ card }) {
   return <span className={styles.heroPrice}>{card.price}</span>;
 }
 
-function TextBlock({ title, description }) {
+function TextBlock({ title, description, large = false }) {
   return (
     <div className={styles.textBlock}>
-      <h4 className={styles.textBlockTitle}>{title}</h4>
+      <h4 className={`${styles.textBlockTitle} ${large ? styles.textBlockTitleLarge : ""}`}>{title}</h4>
       <p className={styles.textBlockDescription}>{description}</p>
     </div>
   );
 }
 
-function AiReels({ openProject }) {
+const REEL_SETS = 4;
+const REEL_SPEED = 0.45; // px per 60fps frame, drifting left to right
+
+function AiReels() {
+  const rootRef = useRef(null);
+  const trackRef = useRef(null);
+  const slotRefs = useRef([]);
+  const inView = useInView(rootRef, 0);
+  const [active, setActive] = useState(null);
+  const reels = useMemo(
+    () => Array.from({ length: REEL_SETS }, (_, set) => featuredWork.map((item, index) => ({ ...item, key: `${set}-${index}` }))).flat(),
+    []
+  );
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track || !inView) return undefined;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const springs = slotRefs.current.map(() => ({ spring: createSpring(), velocity: { x: 0, y: 0 } }));
+    const pointer = { x: 0, y: 0, movementX: 0, movementY: 0, hasPosition: false };
+    let setWidth = track.scrollWidth / REEL_SETS;
+    let offset = 0;
+    let frame = 0;
+    let previousTimestamp = 0;
+
+    const measure = () => {
+      setWidth = track.scrollWidth / REEL_SETS;
+    };
+
+    const onPointerMove = (event) => {
+      if (pointer.hasPosition) {
+        pointer.movementX = event.clientX - pointer.x;
+        pointer.movementY = event.clientY - pointer.y;
+      }
+      pointer.hasPosition = true;
+      pointer.x = event.clientX;
+      pointer.y = event.clientY;
+    };
+
+    const onScroll = () => {
+      pointer.hasPosition = false;
+      pointer.movementX = 0;
+      pointer.movementY = 0;
+    };
+
+    const animate = (timestamp = 0) => {
+      const delta = previousTimestamp > 0 ? Math.min(((timestamp - previousTimestamp) * 60) / 1000, 3) : 1;
+      previousTimestamp = timestamp;
+
+      if (!reduceMotion && setWidth > 0) {
+        offset = (offset + REEL_SPEED * delta) % setWidth;
+        track.style.transform = `translate3d(${(offset - setWidth).toFixed(2)}px, 0, 0)`;
+      }
+
+      slotRefs.current.forEach((element, index) => {
+        const card = springs[index];
+        if (!element || !card) return;
+
+        const velocityDecay = Math.pow(0.9, delta);
+        card.velocity.x *= velocityDecay;
+        card.velocity.y *= velocityDecay;
+        card.spring.current.x += card.velocity.x * delta;
+        card.spring.current.y += card.velocity.y * delta;
+        card.spring.update(delta);
+
+        if (pointer.hasPosition) {
+          const rect = element.getBoundingClientRect();
+          const offsetX = ((pointer.x - (rect.left + rect.width * 0.5)) / window.innerWidth) * 2;
+          const offsetY = ((pointer.y - (rect.top + rect.height * 0.5)) / window.innerHeight) * 2;
+          const distance = Math.sqrt(offsetX * offsetX + offsetY * offsetY);
+          const multiplier = Math.max(0, Math.pow(1 - distance * 0.72, 6)) * 0.42;
+          card.velocity.x += clamp(pointer.movementX, -80, 80) * multiplier;
+          card.velocity.y += clamp(pointer.movementY, -80, 80) * multiplier;
+        }
+
+        card.spring.current.x = clamp(card.spring.current.x, -120, 120);
+        card.spring.current.y = clamp(card.spring.current.y, -120, 120);
+        element.style.setProperty("--offsetX", card.spring.current.x.toFixed(3));
+        element.style.setProperty("--offsetY", card.spring.current.y.toFixed(3));
+        element.style.setProperty("--velocity", (card.spring.velocity.x - card.spring.velocity.y).toFixed(5));
+      });
+
+      pointer.movementX = 0;
+      pointer.movementY = 0;
+      frame = window.requestAnimationFrame(animate);
+    };
+
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(track);
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    frame = window.requestAnimationFrame(animate);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [inView]);
+
+  const open = (reel, index) => {
+    const slot = slotRefs.current[index];
+    if (!slot) return;
+    const from = slot.getBoundingClientRect();
+    setActive((current) => current ?? { reel, index, from, phase: "opening" });
+  };
+
+  const close = () => {
+    setActive((current) => {
+      if (!current || current.phase === "closing") return current;
+      const slot = slotRefs.current[current.index];
+      return { ...current, phase: "closing", from: slot ? slot.getBoundingClientRect() : current.from };
+    });
+  };
+
   return (
-    <div className={styles.reels}>
-      {featuredWork.map((item) => (
-        <button key={item.href} type="button" className={styles.reel} onClick={() => openProject(item.href)} aria-label={item.title}>
-          <span className={styles.reelMedia}>
-            <MediaVisual src={item.src} width={item.width} height={item.height} className={styles.reelVideo} />
-          </span>
-          <span className={styles.reelTag}>
-            <ToolIcons tools={item.tools} />
-          </span>
-        </button>
-      ))}
+    <div ref={rootRef} className={styles.reels} data-inview={inView}>
+      <div ref={trackRef} className={styles.reelsTrack}>
+        {reels.map((reel, index) => (
+          <button
+            key={reel.key}
+            type="button"
+            className={styles.reel}
+            onClick={() => open(reel, index)}
+            aria-label={reel.title}
+            data-picked={active?.index === index}
+            tabIndex={index < featuredWork.length ? 0 : -1}
+          >
+            <span
+              ref={(element) => {
+                slotRefs.current[index] = element;
+              }}
+              className={styles.reelMedia}
+            >
+              <MediaVisual src={reel.src} width={reel.width} height={reel.height} className={styles.reelVideo} />
+            </span>
+            <span className={styles.reelTag}>
+              <ToolIcons tools={reel.tools} />
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {active && <ReelFocus active={active} close={close} onClosed={() => setActive(null)} />}
+    </div>
+  );
+}
+
+function ReelFocus({ active, close, onClosed }) {
+  const [shown, setShown] = useState(false);
+  const { reel, from, phase } = active;
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => window.requestAnimationFrame(() => setShown(true)));
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") close();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("scroll", close, { passive: true });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("scroll", close);
+    };
+  }, [close]);
+
+  const height = Math.min(from.height * 1.55, window.innerHeight * 0.82);
+  const width = height * (from.width / from.height);
+  const focused = shown && phase === "opening";
+  const box = focused
+    ? { left: (window.innerWidth - width) / 2, top: (window.innerHeight - height) / 2, width, height }
+    : { left: from.left, top: from.top, width: from.width, height: from.height };
+
+  return (
+    <div
+      className={styles.reelFocus}
+      data-focused={focused}
+      onClick={(event) => {
+        if (!event.target.closest(`.${styles.reelFocusMedia}`)) close();
+      }}
+    >
+      <div
+        className={styles.reelFocusMedia}
+        style={box}
+        onTransitionEnd={(event) => {
+          if (phase === "closing" && event.propertyName === "width") onClosed();
+        }}
+      >
+        <MediaVisual src={reel.media[0]} width={reel.width} height={reel.height} className={styles.reelVideo} detail />
+      </div>
     </div>
   );
 }
@@ -748,8 +927,8 @@ export default function Home({ initialSlug = null } = {}) {
 
         <div className={styles.indexPageSection}>
           <section id="roadmap" className={styles.indexPageProject}>
-            <TextBlock title="AI da tayyorlangan videolar" description="Shunday ishlarni qila olasiz!" />
-            <AiReels openProject={openProject} />
+            <TextBlock title="AI da tayyorlangan videolar" description="Bir haftada shunday ishlarni qila olasiz!" large />
+            <AiReels />
           </section>
 
           <section className={styles.indexPageProject}>

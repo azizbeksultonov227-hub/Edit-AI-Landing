@@ -537,6 +537,17 @@
   text-transform: uppercase;
 }
 
+.textBlockTitleLarge {
+  font: var(--font-h1);
+  font-size: max(3.8rem, 7vw);
+}
+
+@media (width >= 640px) {
+  .textBlockTitleLarge {
+    white-space: nowrap;
+  }
+}
+
 .textBlockDescription {
   max-width: 24em;
 }
@@ -601,17 +612,24 @@
   scale: 1;
 }
 
-/* AI reels: four 9:16 clips set close together, a light stagger echoing the hero cards */
+/* AI reels: 9:16 clips in a zigzag that drifts left to right; cursor nudges them like the hero cards */
 .reels {
   --reel-radius: clamp(1rem, 1.6vw, 1.5rem);
   --reel-stagger: clamp(1.25rem, 3vw, 2.75rem);
-  display: grid;
-  gap: clamp(0.75rem, 1.4vw, 1.25rem);
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: 0 auto;
-  max-width: 64rem;
-  padding: 0 max(var(--padding), 2rem) var(--reel-stagger);
-  width: 100%;
+  --reel-width: clamp(9.5rem, 17vw, 15rem);
+  --reel-gap: clamp(0.75rem, 1.4vw, 1.25rem);
+  margin-inline: calc(50% - 50vw);
+  overflow-x: clip;
+  padding-block: 1.5rem calc(var(--reel-stagger) + 2rem);
+  width: 100vw;
+}
+
+.reelsTrack {
+  display: flex;
+  gap: var(--reel-gap);
+  padding-inline-end: var(--reel-gap);
+  width: max-content;
+  will-change: transform;
 }
 
 .reel {
@@ -621,10 +639,11 @@
   border: 0;
   cursor: pointer;
   display: flex;
+  flex: none;
   flex-direction: column;
   gap: 0.9rem;
-  min-width: 0;
   padding: 0;
+  width: var(--reel-width);
 }
 
 .reel:nth-child(even) {
@@ -641,25 +660,43 @@
 }
 
 .reelMedia {
+  --offsetX: 0;
+  --offsetY: 0;
+  --velocity: 0;
   aspect-ratio: 9 / 16;
   background: #f2f2f2;
   border-radius: var(--reel-radius);
   box-shadow: 0 9px 21px rgba(0, 0, 0, 0.05), 0 38px 38px rgba(0, 0, 0, 0.045);
   display: block;
   overflow: clip;
-  transition: 0.8s scale var(--ease-out-elastic), 0.8s box-shadow var(--ease-out-elastic);
+  rotate: calc(var(--velocity) * -0.25deg);
+  transition: 0.8s scale var(--ease-out-elastic), 0.8s box-shadow var(--ease-out-elastic), 0.3s opacity var(--ease-out-quad);
+  translate: calc(var(--offsetX) * 1px) calc(var(--offsetY) * 1px);
   width: 100%;
+}
+
+.reel:nth-child(odd) .reelMedia {
+  rotate: calc(-1.5deg - var(--velocity) * 0.25deg);
+}
+
+.reel:nth-child(even) .reelMedia {
+  rotate: calc(1.5deg - var(--velocity) * 0.25deg);
 }
 
 @media (any-hover: hover) {
   .reel:hover .reelMedia {
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08), 0 48px 48px rgba(0, 0, 0, 0.06);
-    scale: 1.03;
+    scale: 1.04;
   }
 }
 
 .reel:active .reelMedia {
   scale: 0.97;
+}
+
+.reel[data-picked="true"] .reelMedia,
+.reel[data-picked="true"] .reelTag {
+  opacity: 0;
 }
 
 .reelVideo {
@@ -680,14 +717,43 @@
   gap: 0.36em;
   line-height: 1;
   padding: 0.55em 0.8em;
+  transition: 0.3s opacity var(--ease-out-quad);
+}
+
+/* Picked reel lifts out of the row toward the viewer; the rest keep drifting */
+.reelFocus {
+  inset: 0;
+  position: fixed;
+  z-index: 40;
+}
+
+.reelFocusMedia {
+  border-radius: var(--reel-radius);
+  box-shadow: 0 9px 21px rgba(0, 0, 0, 0.05), 0 38px 38px rgba(0, 0, 0, 0.045);
+  overflow: clip;
+  position: fixed;
+  transition:
+    left 0.7s var(--ease-out-expo),
+    top 0.7s var(--ease-out-expo),
+    width 0.7s var(--ease-out-expo),
+    height 0.7s var(--ease-out-expo),
+    box-shadow 0.7s var(--ease-out-expo);
+}
+
+.reelFocus[data-focused="true"] .reelFocusMedia {
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.14), 0 80px 80px rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reelFocusMedia {
+    transition-duration: 0.01s;
+  }
 }
 
 @media (width < 768px) {
   .reels {
-    gap: 0.75rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    max-width: 28rem;
-    padding-inline: max(var(--padding), 1.25rem);
+    --reel-width: 38vw;
+    --reel-gap: 0.75rem;
   }
 
   .reelTag {
