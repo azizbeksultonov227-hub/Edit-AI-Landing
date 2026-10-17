@@ -936,7 +936,7 @@ export default function Home({ initialSlug = null } = {}) {
 
         <div className={styles.indexPageSection}>
           <section id="roadmap" className={styles.indexPageProject}>
-            <TextBlock title="90 kun montajni o‘rganib" description="Shunday ishlarni qila olasiz!" />
+            <TextBlock title="AI da tayyorlangan videolar" description="Shunday ishlarni qila olasiz!" />
             <FeaturedCarousel openProject={openProject} />
           </section>
 
