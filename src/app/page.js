@@ -340,6 +340,20 @@ const PERSONAS = [
       </>
     ),
   },
+  {
+    id: "bloger",
+    question: "Siz bloger, influenser misiz?",
+    words: ["Siz", "Bloger,", "influenser", "misiz?"],
+    image: "/media/bloger.webp",
+    alt: "Bloger personaji",
+    lead: (
+      <>
+        Videolarni <strong>10x</strong> tezroq
+        <br />
+        va <strong>10x</strong> arzonroq yarating.
+      </>
+    ),
+  },
 ];
 
 // Repeat the list until a set is wide enough, then run two identical sets for a seamless loop
