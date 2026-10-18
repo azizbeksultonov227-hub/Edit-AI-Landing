@@ -118,6 +118,57 @@
   }
 }
 
+/* Title colours follow the tool icons: Claude orange into Premiere violet into Google blue */
+.title .word {
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: linear-gradient(90deg, #f25623 0%, #d97757 20%, #b45cf0 50%, #6a6cf6 70%, #2f8cf3 100%);
+  background-position: calc(var(--delay) * 50%) 0;
+  background-size: 300% 100%;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Tagline: plain grey sans, an app tile inline, the payoff fading lighter */
+.hero .subtitle {
+  color: #6e6e73;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(2rem, 4.6cqi, 4.6rem);
+  font-stretch: normal;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1.04;
+  max-width: calc(100vw - 2rem);
+  text-transform: none;
+}
+
+.hero .subtitle .space {
+  width: 0.26em;
+}
+
+.subtitleMuted {
+  color: #b9b9be;
+}
+
+.subtitleIcon {
+  align-items: center;
+  background: #1d1d1f;
+  border-radius: 0.24em;
+  box-shadow: 0 0.12em 0.3em rgba(0, 0, 0, 0.22), inset 0 0.03em 0 rgba(255, 255, 255, 0.12);
+  display: inline-flex;
+  height: 0.98em;
+  justify-content: center;
+  margin-inline: 0.04em;
+  rotate: -8deg;
+  vertical-align: -0.12em;
+  width: 0.98em;
+}
+
+.subtitleIcon svg {
+  height: 0.58em;
+  width: 0.58em;
+}
+
 .titleLine {
   display: block;
   white-space: nowrap;
@@ -182,7 +233,7 @@
   align-items: center;
   display: flex;
   justify-content: center;
-  margin-block: clamp(0.35rem, 0.7vw, 0.9rem) clamp(0.72rem, 1.25vw, 1.45rem);
+  margin-block: calc(clamp(0.35rem, 0.7vw, 0.9rem) + var(--hero-lift, 0px)) clamp(0.72rem, 1.25vw, 1.45rem);
   place-items: center;
   pointer-events: none;
   position: relative;
@@ -394,7 +445,7 @@
   }
 
   .heroImages {
-    margin-block: clamp(0.95rem, 3.5vw, 1.35rem) clamp(0.85rem, 2.9vw, 1.25rem);
+    margin-block: calc(clamp(0.95rem, 3.5vw, 1.35rem) + var(--hero-lift, 0px)) clamp(0.85rem, 2.9vw, 1.25rem);
   }
 
   .subtitle {
@@ -423,7 +474,7 @@
   }
 
   .heroImages {
-    margin-block: clamp(1.05rem, 2vw, 1.45rem) clamp(0.95rem, 1.8vw, 1.35rem);
+    margin-block: calc(clamp(1.05rem, 2vw, 1.45rem) + var(--hero-lift, 0px)) clamp(0.95rem, 1.8vw, 1.35rem);
   }
 
   .subtitle {
@@ -458,7 +509,7 @@
   }
 
   .heroImages {
-    margin-block: clamp(1.65rem, 2.4vw, 2.1rem) clamp(0.95rem, 1.7vw, 1.35rem);
+    margin-block: calc(clamp(1.65rem, 2.4vw, 2.1rem) + var(--hero-lift, 0px)) clamp(0.95rem, 1.7vw, 1.35rem);
   }
 
   .subtitle {

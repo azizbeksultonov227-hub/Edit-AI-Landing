@@ -600,10 +600,15 @@ function Footer({ footerRef, footerElementRef, titleRef }) {
   );
 }
 
+const SUBTITLE_ICON = "◆";
+const SUBTITLE_MUTED = new Set(["montaj", "qiladi!"]);
+
 export default function Home({ initialSlug = null } = {}) {
   const [mounted, setMounted] = useState(false);
   const heroRef = useRef(null);
   const heroImageRefs = useRef([]);
+  const titleRef = useRef(null);
+  const heroImagesRef = useRef(null);
   const footerRef = useRef(null);
   const footerElementRef = useRef(null);
   const footerTitleRef = useRef(null);
@@ -617,10 +622,8 @@ export default function Home({ initialSlug = null } = {}) {
   const titleWords = useMemo(() => splitWords("AI Montaj Kursi"), []);
   const subtitleLines = useMemo(
     () => [
-      { key: "desktop-idea", visibilityClass: styles.subtitleDesktopOnly, words: splitWords("Siz g‘oya qilasiz,") },
-      { key: "desktop-edit", visibilityClass: styles.subtitleDesktopOnly, words: splitWords("AI montaj qiladi!") },
-      { key: "compact-idea", visibilityClass: styles.subtitleCompactOnly, words: splitWords("Siz g‘oya qilasiz,") },
-      { key: "compact-edit", visibilityClass: styles.subtitleCompactOnly, words: splitWords("AI montaj qiladi!") },
+      { key: "idea", words: splitWords("Siz g‘oya qilasiz,") },
+      { key: "edit", words: splitWords(`AI ${SUBTITLE_ICON} montaj qiladi!`) },
     ],
     []
   );
@@ -763,6 +766,39 @@ export default function Home({ initialSlug = null } = {}) {
     };
   }, []);
 
+  // Seat the hero cards (and their labels) just under the title at every width
+  useEffect(() => {
+    const title = titleRef.current;
+    const images = heroImagesRef.current;
+    if (!title || !images) return undefined;
+
+    let lift = 0;
+    let timeout = 0;
+    const fit = () => {
+      const tops = heroImageRefs.current
+        .filter(Boolean)
+        .flatMap((card) => [...card.children].map((child) => child.getBoundingClientRect().top));
+      if (!tops.length) return;
+      // The title box sits ~0.1em below the letters; aim a few px under the glyphs
+      const gap = parseFloat(getComputedStyle(document.documentElement).fontSize) * 0.35 - parseFloat(getComputedStyle(title).fontSize) * 0.1;
+      lift = clamp(lift + title.getBoundingClientRect().bottom + gap - Math.min(...tops), -64, 200);
+      images.style.setProperty("--hero-lift", `${lift.toFixed(1)}px`);
+    };
+    const schedule = (delay) => {
+      window.clearTimeout(timeout);
+      timeout = window.setTimeout(fit, delay);
+    };
+    const onResize = () => schedule(200);
+
+    schedule(1400);
+    document.fonts?.ready.then(() => schedule(1400));
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.clearTimeout(timeout);
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
+
   useEffect(() => {
     const phantom = footerRef.current;
     const footer = footerElementRef.current;
@@ -800,7 +836,7 @@ export default function Home({ initialSlug = null } = {}) {
       <main className={styles.main}>
         <div ref={heroRef} className={`${styles.hero} ${mounted ? styles.mounted : ""}`} data-mounted={mounted}>
           <div className={styles.heroMid}>
-            <h1 className={`${styles.title} ${styles.headlineCondensed}`} aria-label="AI Montaj Kursi">
+            <h1 ref={titleRef} className={`${styles.title} ${styles.headlineCondensed}`} aria-label="AI Montaj Kursi">
               <span className={styles.titleLine}>
                 {titleWords.map(({ word, hasSpace }, index) => (
                   <span key={word}>
@@ -813,7 +849,7 @@ export default function Home({ initialSlug = null } = {}) {
               </span>
             </h1>
 
-            <div className={styles.heroImages}>
+            <div ref={heroImagesRef} className={styles.heroImages}>
               {heroCards.map((card, index) => (
                 <div
                   key={`${card.price}-${index}`}
@@ -841,32 +877,27 @@ export default function Home({ initialSlug = null } = {}) {
               ))}
             </div>
 
-            <h2 className={`${styles.subtitle} ${styles.headlineCondensed}`} aria-label="Siz g‘oya qilasiz, AI montaj qiladi!">
+            <h2 className={styles.subtitle} aria-label="Siz g‘oya qilasiz, AI montaj qiladi!">
               {subtitleLines.map((line, lineIndex) => (
-                <span key={line.key} className={`${styles.subtitleLine} ${line.visibilityClass}`}>
-                  {line.words.map(({ word, hasSpace }, wordIndex) => {
-                    const delay = lineIndex + wordIndex + 2;
-
-                    return (
-                      <span key={`${line.key}-${word}-${wordIndex}`}>
-                        <span
-                          className={styles.word}
-                          style={{ "--delay": delay }}
-                          aria-hidden
-                        >
-                          {word.includes("$500") ? (
-                            <>
-                              <span className={styles.heroAmountAccent}>$500</span>
-                              {word.replace("$500", "")}
-                            </>
-                          ) : (
-                            word
-                          )}
-                        </span>
-                        {hasSpace && <span className={styles.space} aria-hidden />}
+                <span key={line.key} className={styles.subtitleLine}>
+                  {line.words.map(({ word, hasSpace }, wordIndex) => (
+                    <span key={`${line.key}-${word}-${wordIndex}`}>
+                      <span
+                        className={`${styles.word} ${SUBTITLE_MUTED.has(word) ? styles.subtitleMuted : ""}`}
+                        style={{ "--delay": lineIndex + wordIndex + 2 }}
+                        aria-hidden
+                      >
+                        {word === SUBTITLE_ICON ? (
+                          <span className={styles.subtitleIcon}>
+                            <ClaudeIcon />
+                          </span>
+                        ) : (
+                          word
+                        )}
                       </span>
-                    );
-                  })}
+                      {hasSpace && <span className={styles.space} aria-hidden />}
+                    </span>
+                  ))}
                 </span>
               ))}
             </h2>
