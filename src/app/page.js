@@ -310,25 +310,25 @@ function ProjectPageOverlay({ project, closeProject }) {
 }
 
 // Cumulus built from puffs: [cx, cy, r]. Top edge billows, bottom stays flatter.
+// Cumulus shaped after the reference: big lobes up top, a dip in the middle, bumpy underside. [cx, cy, r]
 const CLOUD_PUFFS = [
-  [120, 300, 80], [190, 250, 105], [285, 205, 120], [395, 165, 135], [510, 150, 145], [625, 170, 135],
-  [735, 205, 120], [830, 250, 100], [900, 300, 78], [240, 320, 110], [380, 300, 140], [520, 290, 150],
-  [660, 300, 140], [790, 320, 110], [170, 345, 70], [860, 345, 72], [330, 355, 90], [700, 355, 92],
-  [460, 225, 95], [585, 230, 95], [345, 255, 85], [690, 255, 85],
+  [120, 290, 95], [215, 215, 120], [330, 160, 150], [460, 195, 125], [565, 225, 105], [680, 180, 140],
+  [805, 215, 120], [895, 285, 95], [190, 360, 95], [330, 390, 105], [500, 400, 110], [670, 392, 105],
+  [820, 360, 92], [400, 250, 110], [610, 270, 110],
 ];
 const CLOUD_HIGHLIGHTS = [
-  [395, 135, 70], [515, 118, 78], [625, 140, 66], [285, 185, 58], [735, 185, 56], [190, 240, 46], [830, 238, 44],
+  [320, 120, 70], [680, 140, 66], [215, 190, 50], [805, 190, 50], [460, 170, 52],
 ];
 
 function FluffyCloud({ className }) {
   return (
-    <svg className={className} viewBox="0 -20 1000 470" overflow="visible" aria-hidden="true">
+    <svg className={className} viewBox="0 -20 1000 540" overflow="visible" aria-hidden="true">
       <defs>
-        <radialGradient id="cloud-puff" cx="42%" cy="34%" r="66%">
-          <stop offset="0%" stopColor="#ffffff" />
-          <stop offset="55%" stopColor="#fbfbfd" />
-          <stop offset="82%" stopColor="#e6e9f0" />
-          <stop offset="100%" stopColor="#cdd3de" />
+        <radialGradient id="cloud-puff" cx="42%" cy="32%" r="68%">
+          <stop offset="0%" stopColor="#f4faff" />
+          <stop offset="52%" stopColor="#e1effc" />
+          <stop offset="82%" stopColor="#bcdaf4" />
+          <stop offset="100%" stopColor="#9bc5ea" />
         </radialGradient>
         <filter id="cloud-texture" x="-20%" y="-30%" width="140%" height="160%">
           <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="11" result="noise" />
@@ -342,18 +342,19 @@ function FluffyCloud({ className }) {
           <feGaussianBlur stdDeviation="26" />
         </filter>
       </defs>
-      <ellipse cx="510" cy="420" rx="400" ry="34" fill="#8d99ad" opacity="0.28" filter="url(#cloud-shadow)" />
+      <ellipse cx="510" cy="505" rx="390" ry="30" fill="#7fa6cc" opacity="0.3" filter="url(#cloud-shadow)" />
       <g filter="url(#cloud-texture)" fill="url(#cloud-puff)">
+        <ellipse cx="505" cy="330" rx="400" ry="135" />
         {[...CLOUD_PUFFS].sort((a, b) => b[1] - a[1]).map(([cx, cy, r]) => (
           <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} />
         ))}
       </g>
-      <g fill="#c3c9d6" opacity="0.55" filter="url(#cloud-soft)">
-        <ellipse cx="300" cy="360" rx="120" ry="40" />
-        <ellipse cx="520" cy="372" rx="170" ry="44" />
-        <ellipse cx="740" cy="360" rx="120" ry="40" />
+      <g fill="#8fbbe4" opacity="0.45" filter="url(#cloud-soft)">
+        <ellipse cx="320" cy="430" rx="120" ry="40" />
+        <ellipse cx="520" cy="445" rx="170" ry="44" />
+        <ellipse cx="720" cy="430" rx="120" ry="40" />
       </g>
-      <g fill="#ffffff" opacity="0.6" filter="url(#cloud-soft)">
+      <g fill="#ffffff" opacity="0.75" filter="url(#cloud-soft)">
         {CLOUD_HIGHLIGHTS.map(([cx, cy, r]) => (
           <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} />
         ))}
@@ -398,7 +399,7 @@ function EditorCloudSection() {
       <DoodleCloud className={`${styles.doodleCloud} ${styles.doodleCloudRight}`} />
 
       <h2 id="cloud-title" className={styles.cloudTitle}>
-        <span className={styles.cloudTitleLine}>Siz</span> <span className={styles.cloudTitleLine}>montajormisiz?</span>
+        <span className={styles.cloudTitleLine}>Siz montaj</span> <span className={styles.cloudTitleLine}>ustasimisiz?</span>
       </h2>
 
       <div className={styles.cloudStage}>

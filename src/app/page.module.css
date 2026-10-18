@@ -1257,10 +1257,11 @@ video.img {
 .cloudTitle {
   color: var(--lime-deep);
   font-family: "Bebas Neue", "Oswald", "Arial Narrow", sans-serif;
-  font-size: clamp(4.2rem, 10.5vw, 10rem);
+  font-size: clamp(4.2rem, 9.6vw, 9.5rem);
   font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 0.88;
+  letter-spacing: 0.015em;
+  line-height: 0.9;
+  word-spacing: 0.08em;
   margin: 0;
   position: relative;
   text-align: center;
@@ -1269,11 +1270,11 @@ video.img {
 }
 
 .cloudTitleLine {
-  display: inline;
+  display: block;
 }
 
 .cloudStage {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 10;
   margin-top: clamp(-1.5rem, -1.2vw, -0.5rem);
   max-width: 66rem;
   position: relative;
@@ -1287,7 +1288,7 @@ video.img {
   left: 50%;
   position: absolute;
   translate: -50% 0;
-  width: min(112%, 72rem);
+  width: min(104%, 68rem);
   z-index: 2;
 }
 
@@ -1433,17 +1434,13 @@ video.img {
     font-size: clamp(3.4rem, 17vw, 5rem);
   }
 
-  .cloudTitleLine {
-    display: block;
-  }
-
   .cloudStage {
-    aspect-ratio: 4 / 4.6;
+    aspect-ratio: 4 / 4.8;
     margin-top: -1.5rem;
   }
 
   .cloudShape {
-    width: 160%;
+    width: 150%;
   }
 
   .cloudRider {
