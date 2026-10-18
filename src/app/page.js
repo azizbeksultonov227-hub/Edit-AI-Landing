@@ -614,14 +614,13 @@ export default function Home({ initialSlug = null } = {}) {
   const [activeSlug, setActiveSlug] = useState(initialSlug);
   const activeProject = useMemo(() => findProjectBySlug(activeSlug), [activeSlug]);
 
-  const titleWords = useMemo(() => splitWords("Sun’iy intellekt kursi"), []);
+  const titleWords = useMemo(() => splitWords("AI Montaj Kursi"), []);
   const subtitleLines = useMemo(
     () => [
-      { key: "desktop-idea", visibilityClass: styles.subtitleDesktopOnly, words: splitWords("Istalgan g‘oyani AI bilan") },
-      { key: "desktop-reality", visibilityClass: styles.subtitleDesktopOnly, words: splitWords("haqiqatga aylantiring") },
-      { key: "compact-idea", visibilityClass: styles.subtitleCompactOnly, words: splitWords("Istalgan g‘oyani") },
-      { key: "compact-ai", visibilityClass: styles.subtitleCompactOnly, words: splitWords("AI bilan") },
-      { key: "compact-reality", visibilityClass: styles.subtitleCompactOnly, words: splitWords("haqiqatga aylantiring") },
+      { key: "desktop-idea", visibilityClass: styles.subtitleDesktopOnly, words: splitWords("Siz g‘oya qilasiz,") },
+      { key: "desktop-edit", visibilityClass: styles.subtitleDesktopOnly, words: splitWords("AI montaj qiladi!") },
+      { key: "compact-idea", visibilityClass: styles.subtitleCompactOnly, words: splitWords("Siz g‘oya qilasiz,") },
+      { key: "compact-edit", visibilityClass: styles.subtitleCompactOnly, words: splitWords("AI montaj qiladi!") },
     ],
     []
   );
@@ -801,7 +800,7 @@ export default function Home({ initialSlug = null } = {}) {
       <main className={styles.main}>
         <div ref={heroRef} className={`${styles.hero} ${mounted ? styles.mounted : ""}`} data-mounted={mounted}>
           <div className={styles.heroMid}>
-            <h1 className={`${styles.title} ${styles.headlineCondensed}`} aria-label="Sun’iy intellekt kursi">
+            <h1 className={`${styles.title} ${styles.headlineCondensed}`} aria-label="AI Montaj Kursi">
               <span className={styles.titleLine}>
                 {titleWords.map(({ word, hasSpace }, index) => (
                   <span key={word}>
@@ -842,7 +841,7 @@ export default function Home({ initialSlug = null } = {}) {
               ))}
             </div>
 
-            <h2 className={`${styles.subtitle} ${styles.headlineCondensed}`} aria-label="Istalgan g‘oyani AI bilan haqiqatga aylantiring">
+            <h2 className={`${styles.subtitle} ${styles.headlineCondensed}`} aria-label="Siz g‘oya qilasiz, AI montaj qiladi!">
               {subtitleLines.map((line, lineIndex) => (
                 <span key={line.key} className={`${styles.subtitleLine} ${line.visibilityClass}`}>
                   {line.words.map(({ word, hasSpace }, wordIndex) => {
