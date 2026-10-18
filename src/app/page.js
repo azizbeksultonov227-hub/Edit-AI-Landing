@@ -309,6 +309,92 @@ function ProjectPageOverlay({ project, closeProject }) {
   );
 }
 
+function FluffyCloud({ className }) {
+  return (
+    <svg className={className} viewBox="0 -70 1000 490" overflow="visible" aria-hidden="true">
+      <defs>
+        <filter id="cloud-puff" x="-20%" y="-40%" width="140%" height="180%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" seed="7" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="46" />
+          <feGaussianBlur stdDeviation="5" />
+        </filter>
+        <radialGradient id="cloud-shade" cx="50%" cy="30%" r="75%">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="62%" stopColor="#f4f7fb" />
+          <stop offset="100%" stopColor="#d7e0ec" />
+        </radialGradient>
+      </defs>
+      <g filter="url(#cloud-puff)" fill="url(#cloud-shade)">
+        <ellipse cx="500" cy="270" rx="430" ry="120" />
+        <circle cx="250" cy="220" r="120" />
+        <circle cx="400" cy="160" r="150" />
+        <circle cx="580" cy="150" r="160" />
+        <circle cx="760" cy="210" r="125" />
+        <circle cx="140" cy="280" r="90" />
+        <circle cx="870" cy="280" r="95" />
+      </g>
+    </svg>
+  );
+}
+
+function DoodleCloud({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 120 64" aria-hidden="true">
+      <path
+        d="M22 52c-10 0-16-7-16-15 0-8 7-14 15-14 2-10 11-17 22-17 9 0 17 5 20 13 3-2 7-3 11-3 11 0 19 8 19 18 8 1 13 7 13 13 0 3-2 5-5 5H22z"
+        fill="#fff"
+        stroke="#111"
+        strokeWidth="4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function DoodleWing({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 160 130" aria-hidden="true">
+      <path
+        d="M8 112C2 70 30 22 92 8c28-6 54-2 64 8-6 14-18 22-32 26 12 6 18 14 18 24-14 6-28 6-40 4 8 8 10 18 6 26-14 4-28 2-40-2 2 10-2 18-10 24-18 2-36 0-50-6z"
+        fill="#fff"
+        stroke="#111"
+        strokeWidth="5"
+        strokeLinejoin="round"
+      />
+      <path d="M30 96c26-14 56-24 88-30M40 70c26-14 56-22 88-26" fill="none" stroke="#111" strokeWidth="4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function EditorCloudSection() {
+  return (
+    <section className={styles.cloudSection} aria-labelledby="cloud-title">
+      <DoodleCloud className={`${styles.doodleCloud} ${styles.doodleCloudLeft}`} />
+      <DoodleCloud className={`${styles.doodleCloud} ${styles.doodleCloudRight}`} />
+
+      <div className={styles.cloudHead}>
+        <h2 id="cloud-title" className={styles.cloudTitle}>
+          <span className={styles.cloudTitleLine}>Siz</span> <span className={styles.cloudTitleLine}>montajormisiz?</span>
+        </h2>
+        <p className={styles.cloudLead}>AI orqali ishingizni 10x tezlashtirib, daromadingizni ham 10x ga oshiring.</p>
+      </div>
+
+      <div className={styles.cloudStage}>
+        <FluffyCloud className={styles.cloudShape} />
+        <div className={styles.cloudRider}>
+          <DoodleWing className={`${styles.cloudWing} ${styles.cloudWingLeft}`} />
+          <DoodleWing className={`${styles.cloudWing} ${styles.cloudWingRight}`} />
+          <Image className={styles.cloudPerson} src="/media/editor-on-cloud.svg" alt="Bulut ustida o‘tirgan montajor" width={1340} height={2040} unoptimized />
+        </div>
+        <a href="https://telegram.dog/editmaktab500bot?start=auto" target="_blank" rel="noopener noreferrer" className={styles.cloudCta}>
+          <span>Boshlash</span>
+          <span className={styles.cloudCtaArrow} aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+  );
+}
+
 function Footer({ footerRef, footerElementRef, titleRef }) {
   const year = new Date().getFullYear();
   const footerTitleLines = [
@@ -687,6 +773,7 @@ export default function Home({ initialSlug = null } = {}) {
           </div>
         </div>
 
+        <EditorCloudSection />
       </main>
 
       <ProjectPageOverlay project={activeProject} closeProject={closeProject} />

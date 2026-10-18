@@ -1237,3 +1237,236 @@ video.img {
     scale: 0.9;
   }
 }
+
+/* "Siz montajormisiz?" — editor sitting on a cloud in an open sky */
+.cloudSection {
+  --sky-top: #2f7fd6;
+  --sky-mid: #5a9de3;
+  --sky-low: #a9d3ec;
+  --lime: #e2fb6c;
+  --ink: #141414;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-low) 100%);
+  margin-inline: calc(50% - 50vw);
+  overflow: clip;
+  padding: clamp(4rem, 9vw, 7.5rem) max(var(--padding), 1.25rem) clamp(2rem, 5vw, 4rem);
+  position: relative;
+  width: 100vw;
+}
+
+.cloudHead {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 1.6vw, 1.4rem);
+  position: relative;
+  text-align: center;
+  z-index: 2;
+}
+
+.cloudTitle {
+  color: var(--lime);
+  font: var(--font-h1);
+  font-size: max(3.6rem, 9vw);
+  font-stretch: var(--headline-stretch);
+  letter-spacing: -0.01em;
+  line-height: 0.84;
+  margin: 0;
+  text-transform: uppercase;
+  transform: scaleX(var(--headline-scale-x));
+  white-space: nowrap;
+  width: max-content;
+}
+
+.cloudTitleLine {
+  display: inline;
+}
+
+.cloudLead {
+  color: #fff;
+  font-family: var(--font-family-display);
+  font-size: clamp(1.1rem, 1.9vw, 1.65rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin: 0;
+  max-width: 30ch;
+  text-shadow: 0 1px 12px rgba(20, 60, 120, 0.25);
+  text-wrap: balance;
+}
+
+.cloudStage {
+  aspect-ratio: 16 / 9;
+  margin: clamp(1rem, 2.5vw, 2.5rem) auto 0;
+  max-width: 64rem;
+  position: relative;
+  width: 100%;
+}
+
+.cloudShape {
+  animation: cloudBob 7s ease-in-out infinite;
+  bottom: 0;
+  left: 50%;
+  position: absolute;
+  translate: -50% 0;
+  width: min(118%, 70rem);
+  z-index: 2;
+}
+
+.cloudRider {
+  animation: cloudBob 7s ease-in-out infinite;
+  aspect-ratio: 1340 / 2040;
+  bottom: 29%;
+  left: 50%;
+  position: absolute;
+  translate: -46% 0;
+  width: 25%;
+  z-index: 3;
+}
+
+.cloudPerson {
+  display: block;
+  height: 100%;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+.cloudWing {
+  animation: wingFlap 2.6s ease-in-out infinite;
+  position: absolute;
+  top: 4%;
+  width: 46%;
+  z-index: 0;
+}
+
+.cloudWingLeft {
+  right: 58%;
+  scale: -1 1;
+  transform-origin: 50% 85%;
+}
+
+.cloudWingRight {
+  left: 40%;
+  transform-origin: 0% 85%;
+}
+
+.cloudCta {
+  align-items: center;
+  background: var(--lime);
+  border-radius: 999rem;
+  bottom: 9%;
+  box-shadow: 0 0.6rem 1.6rem rgba(30, 60, 100, 0.18);
+  color: var(--ink);
+  display: inline-flex;
+  font-family: var(--font-family-display);
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 600;
+  gap: 1.4rem;
+  left: 50%;
+  padding: 0.45rem 0.45rem 0.45rem 1.6rem;
+  position: absolute;
+  text-decoration: none;
+  transition: 0.6s scale var(--ease-out-elastic);
+  translate: -50% 0;
+  z-index: 4;
+}
+
+@media (any-hover: hover) {
+  .cloudCta:hover {
+    scale: 1.05;
+  }
+}
+
+.cloudCta:focus-visible {
+  outline: 0.18rem solid #fff;
+  outline-offset: 0.3rem;
+}
+
+.cloudCtaArrow {
+  align-items: center;
+  background: var(--ink);
+  border-radius: 50%;
+  color: var(--lime);
+  display: inline-flex;
+  font-size: 1.15em;
+  height: 2.4em;
+  justify-content: center;
+  width: 2.4em;
+}
+
+.doodleCloud {
+  animation: doodleDrift 9s ease-in-out infinite alternate;
+  position: absolute;
+  width: clamp(3.5rem, 6vw, 5.5rem);
+  z-index: 1;
+}
+
+.doodleCloudLeft {
+  left: 4%;
+  top: 18%;
+}
+
+.doodleCloudRight {
+  animation-delay: -4s;
+  right: 9%;
+  top: 58%;
+}
+
+@keyframes cloudBob {
+  50% {
+    transform: translateY(-0.6rem);
+  }
+}
+
+@keyframes wingFlap {
+  50% {
+    rotate: -7deg;
+  }
+}
+
+@keyframes doodleDrift {
+  to {
+    transform: translateX(1.5rem);
+  }
+}
+
+@media (width < 768px) {
+  .cloudStage {
+    aspect-ratio: 4 / 5;
+    margin-top: 1rem;
+  }
+
+  .cloudShape {
+    width: 165%;
+  }
+
+  .cloudRider {
+    bottom: 26%;
+    width: 44%;
+  }
+
+  .cloudTitle {
+    font-size: clamp(2.8rem, 14vw, 4.5rem);
+  }
+
+  .cloudTitleLine {
+    display: block;
+  }
+
+  .doodleCloudLeft {
+    top: 34%;
+  }
+
+  .doodleCloudRight {
+    top: 46%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloudShape,
+  .cloudRider,
+  .cloudWing,
+  .doodleCloud {
+    animation: none;
+  }
+}
