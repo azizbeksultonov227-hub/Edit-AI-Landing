@@ -327,9 +327,11 @@ function EditorCloudSection() {
       <div className={styles.cloudStage}>
         <Image className={styles.cloudCharacter} src="/media/montaj-ustasi.webp" alt="Montaj ustasi personaji" width={900} height={900} unoptimized />
         <p className={styles.cloudLead}>
-          Ishingizni <strong>10x</strong> tezlashtirib,
-          <br />
-          daromadingizni <strong>10x</strong> ga oshiring.
+          <span className={styles.cloudLeadText}>
+            Ishingizni <strong>10x</strong> tezlashtirib,
+            <br />
+            daromadingizni <strong>10x</strong> ga oshiring.
+          </span>
         </p>
       </div>
 

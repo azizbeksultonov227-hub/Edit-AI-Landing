@@ -1298,7 +1298,8 @@ video.img {
 }
 
 .cloudStage {
-  margin-top: clamp(-0.5rem, -0.5vw, 0rem);
+  /* pull the character up so the hair tucks over the foot of "ustasi" */
+  margin-top: clamp(-3.4rem, -3.8vw, -2.2rem);
   max-width: 26rem;
   position: relative;
   width: min(100%, 26rem);
@@ -1316,13 +1317,12 @@ video.img {
 .cloudLead {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.85) 30%, #fff 52%);
   bottom: -2.2em;
-  color: #2f2f2f;
-  font-family: "Poppins", var(--font-family-display);
-  font-size: clamp(1.15rem, 2.1vw, 1.75rem);
-  font-weight: 600;
+  font-family: var(--font-family-display);
+  font-size: clamp(1.35rem, 2.6vw, 2.3rem);
+  font-weight: 500;
   left: 50%;
-  letter-spacing: -0.03em;
-  line-height: 1.25;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
   margin: 0;
   padding: 2.4em 0 0.2em;
   position: absolute;
@@ -1331,25 +1331,31 @@ video.img {
   width: 150%;
 }
 
+.cloudLeadText {
+  background: linear-gradient(180deg, #3a3a3d 0%, #1f1f21 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
 .cloudLead strong {
-  background: var(--lime);
-  border-radius: 0.4em;
-  font-weight: 700;
-  padding: 0.02em 0.28em;
+  font-weight: 500;
+  -webkit-text-fill-color: #9b9ba1;
 }
 
 .cloudCta {
   align-items: center;
-  background: var(--lime);
+  background: #1f1f21;
   border-radius: 999rem;
-  box-shadow: 0 0.6rem 1.6rem rgba(60, 80, 20, 0.16);
-  color: var(--ink);
+  box-shadow: 0 0.6rem 1.6rem rgba(0, 0, 0, 0.16);
+  color: #fff;
   display: inline-flex;
   font-family: var(--font-family-display);
   font-size: clamp(0.95rem, 1.2vw, 1.1rem);
   font-weight: 600;
   gap: 1.2rem;
-  margin-top: clamp(3.5rem, 5vw, 4.5rem);
+  margin-top: clamp(4.5rem, 8vw, 7rem);
   padding: 0.45rem 0.45rem 0.45rem 1.6rem;
   text-decoration: none;
   transition: 0.6s scale var(--ease-out-elastic);
@@ -1362,15 +1368,15 @@ video.img {
 }
 
 .cloudCta:focus-visible {
-  outline: 0.18rem solid var(--ink);
+  outline: 0.18rem solid #1f1f21;
   outline-offset: 0.3rem;
 }
 
 .cloudCtaArrow {
   align-items: center;
-  background: var(--ink);
+  background: #fff;
   border-radius: 50%;
-  color: var(--lime);
+  color: #1f1f21;
   display: inline-flex;
   font-size: 1.15em;
   height: 2.4em;
