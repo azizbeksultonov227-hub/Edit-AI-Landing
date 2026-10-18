@@ -121,11 +121,11 @@
 /* Title and tagline share the reference look: grey sans, an app tile set inline with a soft glow */
 .hero .title {
   color: #5c5c61;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-family-display);
   font-size: max(3.4rem, 6.4cqi);
   font-stretch: normal;
   font-weight: 600;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.04em;
   line-height: 1.02;
   text-transform: none;
 }
@@ -154,11 +154,11 @@
 /* Tagline: plain grey sans, an app tile inline, the payoff fading lighter */
 .hero .subtitle {
   color: #6e6e73;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-family-display);
   font-size: clamp(2rem, 4.6cqi, 4.6rem);
   font-stretch: normal;
   font-weight: 600;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.035em;
   line-height: 1.04;
   max-width: calc(100vw - 2rem);
   text-transform: none;

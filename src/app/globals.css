@@ -1,3 +1,12 @@
+/* Real Inter (variable), used where SF Pro is not available */
+@font-face {
+  font-family: "InterVariable";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/InterVariable-latin.woff2") format("woff2");
+}
+
 @font-face {
   font-display: swap;
   font-family: "Gilroy Headline";
@@ -81,6 +90,7 @@
   --safe-left: env(safe-area-inset-left);
   --font-family-headline: "Gilroy Headline", "Fredoka Headline", "Jost", "Futura Now Headline", sans-serif;
   --font-family-body: "Inter", sans-serif;
+  --font-family-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "InterVariable", "Helvetica Neue", Arial, sans-serif;
   --headline-scale-x-original: 0.68;
   --headline-stretch-original: 68%;
   --headline-letter-spacing-original: -0.055em;
