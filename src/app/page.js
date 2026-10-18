@@ -840,7 +840,7 @@ export default function Home({ initialSlug = null } = {}) {
               <span className={styles.titleLine}>
                 {titleWords.map(({ word, hasSpace }, index) => (
                   <span key={word}>
-                    <span className={styles.word} style={{ "--delay": index }} aria-hidden>
+                    <span className={`${styles.word} ${word === "AI" ? styles.titleAccent : ""}`} style={{ "--delay": index }} aria-hidden>
                       {word}
                     </span>
                     {hasSpace && <span className={styles.space} aria-hidden />}

@@ -118,15 +118,9 @@
   }
 }
 
-/* Title colours follow the tool icons: Claude orange into Premiere violet into Google blue */
-.title .word {
-  -webkit-background-clip: text;
-  background-clip: text;
-  background-image: linear-gradient(90deg, #f25623 0%, #d97757 20%, #b45cf0 50%, #6a6cf6 70%, #2f8cf3 100%);
-  background-position: calc(var(--delay) * 50%) 0;
-  background-size: 300% 100%;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+/* "AI" picks up the site's orange accent; the rest of the title stays ink */
+.titleAccent {
+  color: #f25623;
 }
 
 /* Tagline: plain grey sans, an app tile inline, the payoff fading lighter */
