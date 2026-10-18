@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
 import { featuredWork, heroCards, moreWork, projectDescriptions } from "../data/portfolio";
@@ -382,16 +382,10 @@ function PersonaSlide({ persona, hidden }) {
         </p>
       </div>
 
-      <a
-        href="https://telegram.dog/editmaktab500bot?start=auto"
-        target="_blank"
-        rel="noopener noreferrer"
-        className={styles.cloudCta}
-        tabIndex={hidden ? -1 : undefined}
-      >
+      <StartButton className={styles.cloudCta} tabIndex={hidden ? -1 : undefined}>
         <span>Boshlash</span>
         <span className={styles.cloudCtaArrow} aria-hidden="true">↗</span>
-      </a>
+      </StartButton>
     </div>
   );
 }
@@ -534,6 +528,210 @@ function CourseBoard() {
   );
 }
 
+const TELEGRAM_URL = "https://telegram.dog/editmaktab500bot?start=auto";
+// Set this to a webhook (Google Sheets, CRM, Telegram bot) to receive form leads as JSON
+const LEAD_ENDPOINT = "";
+const OLD_PRICE = "4 990 000";
+const NEW_PRICE = "2 190 000";
+const DISCOUNT_MS = 24 * 60 * 60 * 1000;
+const DISCOUNT_KEY = "editmaktab-discount-deadline";
+
+const LeadFormContext = createContext(() => {});
+
+function StartButton({ className, children = "Boshlash", ...rest }) {
+  const openForm = useContext(LeadFormContext);
+  return (
+    <button type="button" className={`${className} ${styles.startPulse}`} onClick={openForm} {...rest}>
+      {children}
+    </button>
+  );
+}
+
+// The 24h window starts on the visitor's first visit and is remembered in this browser
+function useDiscountCountdown() {
+  const [left, setLeft] = useState(null);
+
+  useEffect(() => {
+    let deadline = Date.now() + DISCOUNT_MS;
+    try {
+      const saved = Number(window.localStorage.getItem(DISCOUNT_KEY));
+      if (saved > 0) deadline = saved;
+      else window.localStorage.setItem(DISCOUNT_KEY, String(deadline));
+    } catch {
+      // storage blocked: the window simply restarts on each visit
+    }
+    const tick = () => setLeft(Math.max(0, deadline - Date.now()));
+    tick();
+    const timer = window.setInterval(tick, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  return left;
+}
+
+function Countdown() {
+  const left = useDiscountCountdown();
+  if (left === null) return <p className={styles.countdown}>&nbsp;</p>;
+  if (left === 0) return <p className={styles.countdown}>Chegirma muddati tugadi</p>;
+
+  const total = Math.floor(left / 1000);
+  const parts = [Math.floor(total / 3600), Math.floor((total % 3600) / 60), total % 60].map((n) => String(n).padStart(2, "0"));
+
+  return (
+    <p className={styles.countdown} aria-live="off">
+      <span>Chegirma tugashiga:</span>
+      <span className={styles.countdownTime}>
+        {parts.map((part, index) => (
+          <span key={index} className={styles.countdownCell}>
+            {part}
+            <small>{["soat", "daq", "son"][index]}</small>
+          </span>
+        ))}
+      </span>
+    </p>
+  );
+}
+
+const RESIDENCE_OPTIONS = ["Toshkent shahri", "Boshqa"];
+const AGE_OPTIONS = ["14–18", "18–24", "24+"];
+
+function ChoiceGroup({ name, label, options, value, onChange }) {
+  return (
+    <fieldset className={styles.formChoices}>
+      <legend className={styles.formLabel}>{label}</legend>
+      <div className={styles.formChips}>
+        {options.map((option) => (
+          <label key={option} className={styles.formChip} data-checked={value === option}>
+            <input type="radio" name={name} value={option} checked={value === option} onChange={() => onChange(option)} required />
+            {option}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
+function LeadFormModal({ open, onClose }) {
+  const [values, setValues] = useState({ name: "", phone: "+998 ", residence: "", age: "" });
+  const [status, setStatus] = useState("idle");
+  const [error, setError] = useState("");
+  const firstFieldRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.setTimeout(() => firstFieldRef.current?.focus(), 50);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  const set = (key) => (value) => setValues((current) => ({ ...current, [key]: value }));
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    const digits = values.phone.replace(/\D/g, "");
+    if (values.name.trim().length < 2) return setError("Ismingizni kiriting.");
+    if (digits.length < 9) return setError("Telefon raqamingizni to‘liq kiriting, masalan +998 90 123 45 67.");
+    if (!values.residence || !values.age) return setError("Yashash joyi va yoshingizni tanlang.");
+    setError("");
+    setStatus("sending");
+    try {
+      if (LEAD_ENDPOINT) {
+        await fetch(LEAD_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...values, name: values.name.trim(), createdAt: new Date().toISOString() }),
+        });
+      }
+      setStatus("done");
+    } catch {
+      setStatus("idle");
+      setError("Yuborib bo‘lmadi. Internetni tekshirib, qayta urinib ko‘ring.");
+    }
+  };
+
+  return (
+    <div className={styles.formBackdrop} onClick={(event) => event.target === event.currentTarget && onClose()}>
+      <div className={styles.formCard} role="dialog" aria-modal="true" aria-labelledby="lead-form-title">
+        <button type="button" className={styles.formClose} onClick={onClose} aria-label="Yopish">
+          ×
+        </button>
+
+        {status === "done" ? (
+          <div className={styles.formDone}>
+            <h3 id="lead-form-title" className={styles.formTitle}>
+              Rahmat, {values.name.trim()}!
+            </h3>
+            <p className={styles.formHint}>Arizangiz qabul qilindi. Tez orada siz bilan bog‘lanamiz.</p>
+            <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer" className={styles.formSubmit}>
+              Telegram botga o‘tish ↗
+            </a>
+          </div>
+        ) : (
+          <form className={styles.form} onSubmit={onSubmit} noValidate>
+            <h3 id="lead-form-title" className={styles.formTitle}>
+              Kursga yoziling
+            </h3>
+            <p className={styles.formHint}>
+              Chegirmali narx: <s>{OLD_PRICE}</s> <strong>{NEW_PRICE} so‘m</strong>
+            </p>
+
+            <label className={styles.formField}>
+              <span className={styles.formLabel}>Ismingiz</span>
+              <input
+                ref={firstFieldRef}
+                id="lead-name"
+                type="text"
+                autoComplete="name"
+                placeholder="Ismingiz"
+                value={values.name}
+                onChange={(event) => set("name")(event.target.value)}
+                required
+              />
+            </label>
+
+            <label className={styles.formField}>
+              <span className={styles.formLabel}>Telefon raqamingiz</span>
+              <input
+                id="lead-phone"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                placeholder="+998 90 123 45 67"
+                value={values.phone}
+                onChange={(event) => set("phone")(event.target.value)}
+                required
+              />
+            </label>
+
+            <ChoiceGroup name="residence" label="Qayerda istiqomat qilasiz?" options={RESIDENCE_OPTIONS} value={values.residence} onChange={set("residence")} />
+            <ChoiceGroup name="age" label="Yoshingiz nechida?" options={AGE_OPTIONS} value={values.age} onChange={set("age")} />
+
+            {error && (
+              <p className={styles.formError} role="alert">
+                {error}
+              </p>
+            )}
+
+            <button type="submit" className={styles.formSubmit} disabled={status === "sending"}>
+              {status === "sending" ? "Yuborilmoqda…" : "Yuborish"}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function Footer({ footerRef, footerElementRef, titleRef }) {
   const year = new Date().getFullYear();
   const footerTitleLines = [
@@ -588,9 +786,16 @@ function Footer({ footerRef, footerElementRef, titleRef }) {
             </span>
           ))}
         </p>
-        <a href="https://telegram.dog/editmaktab500bot?start=auto" target="_blank" rel="noopener noreferrer" className={`${styles.ctaButton} ${styles.footerCta}`}>
-          BOSHLASH
-        </a>
+        <div className={styles.priceBlock}>
+          <span className={styles.priceOld}>
+            <s>{OLD_PRICE}</s> so‘m
+          </span>
+          <span className={styles.priceNew}>
+            {NEW_PRICE} <small>so‘m</small>
+          </span>
+          <Countdown />
+        </div>
+        <StartButton className={`${styles.ctaButton} ${styles.footerCta}`}>BOSHLASH</StartButton>
         <small className={styles.footerSubtitle}>All rights reserved {year} EditMaktab</small>
       </footer>
     </>
@@ -615,6 +820,9 @@ export default function Home({ initialSlug = null } = {}) {
   const scrollYRef = useRef(0);
   const smoothFooterYRef = useRef(0);
   const [activeSlug, setActiveSlug] = useState(initialSlug);
+  const [formOpen, setFormOpen] = useState(false);
+  const openForm = useCallback(() => setFormOpen(true), []);
+  const closeForm = useCallback(() => setFormOpen(false), []);
   const activeProject = useMemo(() => findProjectBySlug(activeSlug), [activeSlug]);
 
   const titleWords = useMemo(() => splitWords(`AI ${TITLE_ICON} Montaj Kursi`), []);
@@ -830,7 +1038,7 @@ export default function Home({ initialSlug = null } = {}) {
   }, []);
 
   return (
-    <>
+    <LeadFormContext.Provider value={openForm}>
       <main className={styles.main}>
         <div ref={heroRef} className={`${styles.hero} ${mounted ? styles.mounted : ""}`} data-mounted={mounted}>
           <div className={styles.heroMid}>
@@ -906,9 +1114,7 @@ export default function Home({ initialSlug = null } = {}) {
               ))}
             </h2>
 
-            <a href="https://telegram.dog/editmaktab500bot?start=auto" target="_blank" rel="noopener noreferrer" className={`${styles.ctaButton} ${styles.heroCta}`}>
-              BOSHLASH
-            </a>
+            <StartButton className={`${styles.ctaButton} ${styles.heroCta}`}>BOSHLASH</StartButton>
           </div>
         </div>
 
@@ -918,6 +1124,7 @@ export default function Home({ initialSlug = null } = {}) {
 
       <ProjectPageOverlay project={activeProject} closeProject={closeProject} />
       <Footer footerRef={footerRef} footerElementRef={footerElementRef} titleRef={footerTitleRef} />
-    </>
+      <LeadFormModal open={formOpen} onClose={closeForm} />
+    </LeadFormContext.Provider>
   );
 }
