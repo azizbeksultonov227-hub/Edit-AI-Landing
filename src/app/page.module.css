@@ -1254,23 +1254,44 @@ video.img {
   width: 100vw;
 }
 
+/* Headline after the reference: small lead-in, two heavy words, small tail */
 .cloudTitle {
-  color: var(--lime-deep);
-  font-family: "Bebas Neue", "Oswald", "Arial Narrow", sans-serif;
-  font-size: clamp(2.6rem, 4.8vw, 4.75rem);
-  font-weight: 400;
-  letter-spacing: 0.015em;
-  line-height: 0.9;
-  word-spacing: 0.08em;
+  align-items: center;
+  color: #2f2f2f;
+  display: flex;
+  flex-direction: column;
+  font-family: "Poppins", var(--font-family-display);
   margin: 0;
   position: relative;
   text-align: center;
-  text-transform: uppercase;
+  text-transform: none;
   z-index: 1;
 }
 
-.cloudTitleLine {
-  display: block;
+.cloudTitleSmall {
+  font-size: clamp(1rem, 1.9vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.cloudTitleBig {
+  background: linear-gradient(90deg, #2f2f2f 0%, #3a3632 55%, #6e5a44 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(3.2rem, 7vw, 6.5rem);
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 0.84;
+  /* room for the "j" descender and accent tops inside the clipped background */
+  margin-block: -0.06em -0.16em;
+  padding-block: 0.06em 0.16em;
+  -webkit-text-fill-color: transparent;
+}
+
+.cloudTitleBig + .cloudTitleBig {
+  margin-bottom: -0.06em;
 }
 
 .cloudStage {
@@ -1377,7 +1398,7 @@ video.img {
 .cloudLead {
   color: #2c2c2c;
   font-family: var(--font-family-display);
-  font-size: clamp(1.6rem, 3.4vw, 3rem);
+  font-size: clamp(1.15rem, 2vw, 1.75rem);
   font-weight: 650;
   letter-spacing: -0.035em;
   line-height: 1.12;
@@ -1430,9 +1451,6 @@ video.img {
 }
 
 @media (width < 768px) {
-  .cloudTitle {
-    font-size: clamp(2.4rem, 11vw, 3.2rem);
-  }
 
   .cloudStage {
     aspect-ratio: 4 / 4.8;

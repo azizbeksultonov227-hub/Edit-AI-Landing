@@ -398,8 +398,11 @@ function EditorCloudSection() {
       <DoodleCloud className={`${styles.doodleCloud} ${styles.doodleCloudLeft}`} />
       <DoodleCloud className={`${styles.doodleCloud} ${styles.doodleCloudRight}`} />
 
-      <h2 id="cloud-title" className={styles.cloudTitle}>
-        <span className={styles.cloudTitleLine}>Siz montaj</span> <span className={styles.cloudTitleLine}>ustasimisiz?</span>
+      <h2 id="cloud-title" className={styles.cloudTitle} aria-label="Siz montaj ustasimisiz?">
+        <span className={styles.cloudTitleSmall} aria-hidden="true">Siz</span>
+        <span className={styles.cloudTitleBig} aria-hidden="true">Montaj</span>
+        <span className={styles.cloudTitleBig} aria-hidden="true">ustasi</span>
+        <span className={styles.cloudTitleSmall} aria-hidden="true">misiz?</span>
       </h2>
 
       <div className={styles.cloudStage}>
@@ -416,7 +419,7 @@ function EditorCloudSection() {
       </div>
 
       <p className={styles.cloudLead}>
-        AI orqali ishingizni <strong>10x</strong> tezlashtirib, daromadingizni ham <strong>10x</strong> ga oshiring.
+        Ishingizni <strong>10x</strong> tezlashtirib, daromadingizni <strong>10x</strong> ga oshiring.
       </p>
     </section>
   );
