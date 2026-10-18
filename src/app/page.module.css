@@ -118,9 +118,37 @@
   }
 }
 
-/* "AI" picks up the site's orange accent; the rest of the title stays ink */
-.titleAccent {
-  color: #f25623;
+/* Title and tagline share the reference look: grey sans, an app tile set inline with a soft glow */
+.hero .title {
+  color: #5c5c61;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  font-size: max(3.4rem, 6.4cqi);
+  font-stretch: normal;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 1.02;
+  text-transform: none;
+}
+
+.hero .title .space {
+  width: 0.24em;
+}
+
+.titleIcon {
+  border-radius: 0.24em;
+  box-shadow: 0 0.06em 0.18em rgba(122, 160, 0, 0.35), 0 0 0.55em rgba(206, 255, 30, 0.55);
+  display: inline-block;
+  height: 0.92em;
+  overflow: clip;
+  vertical-align: -0.1em;
+  width: 0.92em;
+}
+
+.titleIcon img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
 }
 
 /* Tagline: plain grey sans, an app tile inline, the payoff fading lighter */

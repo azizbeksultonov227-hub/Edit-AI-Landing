@@ -600,6 +600,7 @@ function Footer({ footerRef, footerElementRef, titleRef }) {
   );
 }
 
+const TITLE_ICON = "◇";
 const SUBTITLE_ICON = "◆";
 const SUBTITLE_MUTED = new Set(["montaj", "qiladi!"]);
 
@@ -619,7 +620,7 @@ export default function Home({ initialSlug = null } = {}) {
   const [activeSlug, setActiveSlug] = useState(initialSlug);
   const activeProject = useMemo(() => findProjectBySlug(activeSlug), [activeSlug]);
 
-  const titleWords = useMemo(() => splitWords("AI Montaj Kursi"), []);
+  const titleWords = useMemo(() => splitWords(`AI ${TITLE_ICON} Montaj Kursi`), []);
   const subtitleLines = useMemo(
     () => [
       { key: "idea", words: splitWords("Siz g‘oya qilasiz,") },
@@ -779,8 +780,8 @@ export default function Home({ initialSlug = null } = {}) {
         .filter(Boolean)
         .flatMap((card) => [...card.children].map((child) => child.getBoundingClientRect().top));
       if (!tops.length) return;
-      // The title box sits ~0.1em below the letters; aim a few px under the glyphs
-      const gap = parseFloat(getComputedStyle(document.documentElement).fontSize) * 0.35 - parseFloat(getComputedStyle(title).fontSize) * 0.1;
+      // The title box already clears the descender of "j"; leave a hairline under it
+      const gap = parseFloat(getComputedStyle(document.documentElement).fontSize) * 0.25;
       lift = clamp(lift + title.getBoundingClientRect().bottom + gap - Math.min(...tops), -64, 200);
       images.style.setProperty("--hero-lift", `${lift.toFixed(1)}px`);
     };
@@ -836,12 +837,18 @@ export default function Home({ initialSlug = null } = {}) {
       <main className={styles.main}>
         <div ref={heroRef} className={`${styles.hero} ${mounted ? styles.mounted : ""}`} data-mounted={mounted}>
           <div className={styles.heroMid}>
-            <h1 ref={titleRef} className={`${styles.title} ${styles.headlineCondensed}`} aria-label="AI Montaj Kursi">
+            <h1 ref={titleRef} className={styles.title} aria-label="AI Montaj Kursi">
               <span className={styles.titleLine}>
                 {titleWords.map(({ word, hasSpace }, index) => (
                   <span key={word}>
-                    <span className={`${styles.word} ${word === "AI" ? styles.titleAccent : ""}`} style={{ "--delay": index }} aria-hidden>
-                      {word}
+                    <span className={styles.word} style={{ "--delay": index }} aria-hidden>
+                      {word === TITLE_ICON ? (
+                        <span className={styles.titleIcon}>
+                          <Image src="/icons/higgsfield.png" alt="" width={96} height={96} unoptimized priority />
+                        </span>
+                      ) : (
+                        word
+                      )}
                     </span>
                     {hasSpace && <span className={styles.space} aria-hidden />}
                   </span>
