@@ -309,29 +309,54 @@ function ProjectPageOverlay({ project, closeProject }) {
   );
 }
 
+// Cumulus built from puffs: [cx, cy, r]. Top edge billows, bottom stays flatter.
+const CLOUD_PUFFS = [
+  [120, 300, 80], [190, 250, 105], [285, 205, 120], [395, 165, 135], [510, 150, 145], [625, 170, 135],
+  [735, 205, 120], [830, 250, 100], [900, 300, 78], [240, 320, 110], [380, 300, 140], [520, 290, 150],
+  [660, 300, 140], [790, 320, 110], [170, 345, 70], [860, 345, 72], [330, 355, 90], [700, 355, 92],
+  [460, 225, 95], [585, 230, 95], [345, 255, 85], [690, 255, 85],
+];
+const CLOUD_HIGHLIGHTS = [
+  [395, 135, 70], [515, 118, 78], [625, 140, 66], [285, 185, 58], [735, 185, 56], [190, 240, 46], [830, 238, 44],
+];
+
 function FluffyCloud({ className }) {
   return (
-    <svg className={className} viewBox="0 -70 1000 490" overflow="visible" aria-hidden="true">
+    <svg className={className} viewBox="0 -20 1000 470" overflow="visible" aria-hidden="true">
       <defs>
-        <filter id="cloud-puff" x="-20%" y="-40%" width="140%" height="180%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" seed="7" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="46" />
-          <feGaussianBlur stdDeviation="5" />
-        </filter>
-        <radialGradient id="cloud-shade" cx="50%" cy="30%" r="75%">
+        <radialGradient id="cloud-puff" cx="42%" cy="34%" r="66%">
           <stop offset="0%" stopColor="#ffffff" />
-          <stop offset="62%" stopColor="#f4f7fb" />
-          <stop offset="100%" stopColor="#d7e0ec" />
+          <stop offset="55%" stopColor="#fbfbfd" />
+          <stop offset="82%" stopColor="#e6e9f0" />
+          <stop offset="100%" stopColor="#cdd3de" />
         </radialGradient>
+        <filter id="cloud-texture" x="-20%" y="-30%" width="140%" height="160%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="11" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="24" result="shaped" />
+          <feGaussianBlur in="shaped" stdDeviation="2" />
+        </filter>
+        <filter id="cloud-soft" x="-30%" y="-50%" width="160%" height="200%">
+          <feGaussianBlur stdDeviation="16" />
+        </filter>
+        <filter id="cloud-shadow" x="-30%" y="-80%" width="160%" height="260%">
+          <feGaussianBlur stdDeviation="26" />
+        </filter>
       </defs>
-      <g filter="url(#cloud-puff)" fill="url(#cloud-shade)">
-        <ellipse cx="500" cy="270" rx="430" ry="120" />
-        <circle cx="250" cy="220" r="120" />
-        <circle cx="400" cy="160" r="150" />
-        <circle cx="580" cy="150" r="160" />
-        <circle cx="760" cy="210" r="125" />
-        <circle cx="140" cy="280" r="90" />
-        <circle cx="870" cy="280" r="95" />
+      <ellipse cx="510" cy="420" rx="400" ry="34" fill="#8d99ad" opacity="0.28" filter="url(#cloud-shadow)" />
+      <g filter="url(#cloud-texture)" fill="url(#cloud-puff)">
+        {[...CLOUD_PUFFS].sort((a, b) => b[1] - a[1]).map(([cx, cy, r]) => (
+          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} />
+        ))}
+      </g>
+      <g fill="#c3c9d6" opacity="0.55" filter="url(#cloud-soft)">
+        <ellipse cx="300" cy="360" rx="120" ry="40" />
+        <ellipse cx="520" cy="372" rx="170" ry="44" />
+        <ellipse cx="740" cy="360" rx="120" ry="40" />
+      </g>
+      <g fill="#ffffff" opacity="0.6" filter="url(#cloud-soft)">
+        {CLOUD_HIGHLIGHTS.map(([cx, cy, r]) => (
+          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} />
+        ))}
       </g>
     </svg>
   );
@@ -372,12 +397,9 @@ function EditorCloudSection() {
       <DoodleCloud className={`${styles.doodleCloud} ${styles.doodleCloudLeft}`} />
       <DoodleCloud className={`${styles.doodleCloud} ${styles.doodleCloudRight}`} />
 
-      <div className={styles.cloudHead}>
-        <h2 id="cloud-title" className={styles.cloudTitle}>
-          <span className={styles.cloudTitleLine}>Siz</span> <span className={styles.cloudTitleLine}>montajormisiz?</span>
-        </h2>
-        <p className={styles.cloudLead}>AI orqali ishingizni 10x tezlashtirib, daromadingizni ham 10x ga oshiring.</p>
-      </div>
+      <h2 id="cloud-title" className={styles.cloudTitle}>
+        <span className={styles.cloudTitleLine}>Siz</span> <span className={styles.cloudTitleLine}>montajormisiz?</span>
+      </h2>
 
       <div className={styles.cloudStage}>
         <FluffyCloud className={styles.cloudShape} />
@@ -391,6 +413,10 @@ function EditorCloudSection() {
           <span className={styles.cloudCtaArrow} aria-hidden="true">↗</span>
         </a>
       </div>
+
+      <p className={styles.cloudLead}>
+        AI orqali ishingizni <strong>10x</strong> tezlashtirib, daromadingizni ham <strong>10x</strong> ga oshiring.
+      </p>
     </section>
   );
 }
