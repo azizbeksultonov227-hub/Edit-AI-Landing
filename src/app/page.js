@@ -734,59 +734,12 @@ function LeadFormModal({ open, onClose }) {
 
 function Footer({ footerRef, footerElementRef, titleRef }) {
   const year = new Date().getFullYear();
-  const footerTitleLines = [
-    {
-      key: "desktop-ai",
-      visibilityClass: styles.footerTitleDesktopOnly,
-      content: (
-        <>
-          <span className={styles.footerAmountAccent}>AI</span> bilan videomontaj
-        </>
-      ),
-    },
-    {
-      key: "desktop-weeks",
-      visibilityClass: styles.footerTitleDesktopOnly,
-      content: (
-        <>
-          qilishni <span className={styles.footerAmountAccent}>3 haftada</span>
-        </>
-      ),
-    },
-    {
-      key: "mobile-ai",
-      visibilityClass: styles.footerTitleMobileOnly,
-      content: (
-        <>
-          <span className={styles.footerAmountAccent}>AI</span> bilan
-        </>
-      ),
-    },
-    { key: "mobile-montage", visibilityClass: styles.footerTitleMobileOnly, text: "videomontaj" },
-    { key: "mobile-doing", visibilityClass: styles.footerTitleMobileOnly, text: "qilishni" },
-    {
-      key: "mobile-weeks",
-      visibilityClass: styles.footerTitleMobileOnly,
-      content: <span className={styles.footerAmountAccent}>3 haftada</span>,
-    },
-    { key: "teach", text: "o‘rgatamiz!" },
-  ];
 
   return (
     <>
       <div ref={footerRef} className={styles.intersectionPhantom} />
       <footer ref={footerElementRef} className={styles.footer}>
-        <p ref={titleRef} className={styles.footerTitle}>
-          {footerTitleLines.map((line) => (
-            <span
-              key={line.key}
-              className={`${styles.footerTitleLine} ${line.tone === "large" ? styles.footerTitleLineLarge : styles.footerTitleLineSmall} ${line.visibilityClass ?? ""}`}
-            >
-              {line.content ?? line.text}
-            </span>
-          ))}
-        </p>
-        <div className={styles.priceBlock}>
+        <div ref={titleRef} className={styles.priceBlock}>
           <span className={styles.priceOld}>
             <s>{OLD_PRICE}</s> so‘m
           </span>
