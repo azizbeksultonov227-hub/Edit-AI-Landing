@@ -1249,12 +1249,12 @@ video.img {
   margin-bottom: clamp(5rem, 12vw, 11rem);
   margin-inline: calc(50% - 50vw);
   overflow: clip;
-  padding: clamp(2rem, 5vw, 4rem) max(var(--padding), 1.25rem) 0;
+  padding: clamp(2rem, 5vw, 4rem) max(var(--padding), 1.25rem) 2.5rem;
   position: relative;
   width: 100vw;
 }
 
-/* Headline after the reference: small lead-in, two heavy words, small tail */
+/* Headline: two heavy words, each paired with a small word beside it */
 .cloudTitle {
   align-items: center;
   color: #2f2f2f;
@@ -1268,11 +1268,18 @@ video.img {
   z-index: 1;
 }
 
+.cloudTitleRow {
+  align-items: baseline;
+  display: flex;
+  gap: 0.35em;
+  justify-content: center;
+}
+
 .cloudTitleSmall {
   font-size: clamp(1rem, 1.9vw, 1.75rem);
   font-weight: 500;
   letter-spacing: -0.01em;
-  line-height: 1.2;
+  line-height: 1;
 }
 
 .cloudTitleBig {
@@ -1290,45 +1297,62 @@ video.img {
   -webkit-text-fill-color: transparent;
 }
 
-.cloudTitleBig + .cloudTitleBig {
-  margin-bottom: -0.06em;
-}
-
 .cloudStage {
-  margin-top: clamp(1.25rem, 2.5vw, 2rem);
-  max-width: 24rem;
+  margin-top: clamp(-0.5rem, -0.5vw, 0rem);
+  max-width: 26rem;
   position: relative;
-  width: min(100%, 24rem);
+  width: min(100%, 26rem);
+  z-index: 2;
 }
 
 .cloudCharacter {
   aspect-ratio: 1 / 1;
-  border-radius: clamp(1.25rem, 2vw, 1.75rem);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1), 0 48px 60px rgba(0, 0, 0, 0.08);
   display: block;
   height: auto;
   width: 100%;
+}
+
+/* The lead sits over the cropped chest on a white fade, hiding the cut edge */
+.cloudLead {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.85) 30%, #fff 52%);
+  bottom: -2.2em;
+  color: #2f2f2f;
+  font-family: "Poppins", var(--font-family-display);
+  font-size: clamp(1.15rem, 2.1vw, 1.75rem);
+  font-weight: 600;
+  left: 50%;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  margin: 0;
+  padding: 2.4em 0 0.2em;
+  position: absolute;
+  text-align: center;
+  translate: -50% 0;
+  width: 150%;
+}
+
+.cloudLead strong {
+  background: var(--lime);
+  border-radius: 0.4em;
+  font-weight: 700;
+  padding: 0.02em 0.28em;
 }
 
 .cloudCta {
   align-items: center;
   background: var(--lime);
   border-radius: 999rem;
-  bottom: 0;
   box-shadow: 0 0.6rem 1.6rem rgba(60, 80, 20, 0.16);
   color: var(--ink);
   display: inline-flex;
   font-family: var(--font-family-display);
-  font-size: clamp(0.85rem, 1vw, 1rem);
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
   font-weight: 600;
-  gap: 1rem;
-  left: 50%;
+  gap: 1.2rem;
+  margin-top: clamp(3.5rem, 5vw, 4.5rem);
   padding: 0.45rem 0.45rem 0.45rem 1.6rem;
-  position: absolute;
   text-decoration: none;
   transition: 0.6s scale var(--ease-out-elastic);
-  translate: -50% 50%;
-  z-index: 4;
 }
 
 @media (any-hover: hover) {
@@ -1354,22 +1378,12 @@ video.img {
   width: 2.4em;
 }
 
-.cloudLead {
-  color: #2c2c2c;
-  font-family: var(--font-family-display);
-  font-size: clamp(1.15rem, 2vw, 1.75rem);
-  font-weight: 650;
-  letter-spacing: -0.035em;
-  line-height: 1.12;
-  margin: clamp(3rem, 5vw, 4rem) 0 0;
-  max-width: 24ch;
-  text-align: center;
-  text-wrap: balance;
-}
+@media (width < 768px) {
+  .cloudStage {
+    width: min(100%, 20rem);
+  }
 
-.cloudLead strong {
-  background: linear-gradient(transparent 58%, var(--lime) 58%, var(--lime) 92%, transparent 92%);
-  font-weight: 800;
-  padding-inline: 0.06em;
+  .cloudLead {
+    width: calc(100vw - 2rem);
+  }
 }
-

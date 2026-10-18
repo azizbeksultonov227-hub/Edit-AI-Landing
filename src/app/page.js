@@ -314,23 +314,29 @@ function EditorCloudSection() {
   return (
     <section className={styles.cloudSection} aria-labelledby="cloud-title">
       <h2 id="cloud-title" className={styles.cloudTitle} aria-label="Siz montaj ustasimisiz?">
-        <span className={styles.cloudTitleSmall} aria-hidden="true">Siz</span>
-        <span className={styles.cloudTitleBig} aria-hidden="true">Montaj</span>
-        <span className={styles.cloudTitleBig} aria-hidden="true">ustasi</span>
-        <span className={styles.cloudTitleSmall} aria-hidden="true">misiz?</span>
+        <span className={styles.cloudTitleRow} aria-hidden="true">
+          <span className={styles.cloudTitleSmall}>Siz</span>
+          <span className={styles.cloudTitleBig}>Montaj</span>
+        </span>
+        <span className={styles.cloudTitleRow} aria-hidden="true">
+          <span className={styles.cloudTitleBig}>ustasi</span>
+          <span className={styles.cloudTitleSmall}>misiz?</span>
+        </span>
       </h2>
 
       <div className={styles.cloudStage}>
-        <Image className={styles.cloudCharacter} src="/media/montaj-ustasi.jpg" alt="Montaj ustasi personaji" width={736} height={736} unoptimized />
-        <a href="https://telegram.dog/editmaktab500bot?start=auto" target="_blank" rel="noopener noreferrer" className={styles.cloudCta}>
-          <span>Boshlash</span>
-          <span className={styles.cloudCtaArrow} aria-hidden="true">↗</span>
-        </a>
+        <Image className={styles.cloudCharacter} src="/media/montaj-ustasi.webp" alt="Montaj ustasi personaji" width={900} height={900} unoptimized />
+        <p className={styles.cloudLead}>
+          Ishingizni <strong>10x</strong> tezlashtirib,
+          <br />
+          daromadingizni <strong>10x</strong> ga oshiring.
+        </p>
       </div>
 
-      <p className={styles.cloudLead}>
-        Ishingizni <strong>10x</strong> tezlashtirib, daromadingizni <strong>10x</strong> ga oshiring.
-      </p>
+      <a href="https://telegram.dog/editmaktab500bot?start=auto" target="_blank" rel="noopener noreferrer" className={styles.cloudCta}>
+        <span>Boshlash</span>
+        <span className={styles.cloudCtaArrow} aria-hidden="true">↗</span>
+      </a>
     </section>
   );
 }
