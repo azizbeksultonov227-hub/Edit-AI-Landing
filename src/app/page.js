@@ -342,13 +342,14 @@ const PERSONAS = [
   },
 ];
 
-const PERSONA_INTERVAL = 5500;
+// Repeat the list until a set is wide enough, then run two identical sets for a seamless loop
+const PERSONA_SET = PERSONAS.length >= 4 ? PERSONAS : Array.from({ length: Math.ceil(4 / PERSONAS.length) }, () => PERSONAS).flat();
 
 function PersonaSlide({ persona, hidden }) {
   const [smallBefore, bigFirst, bigSecond, smallAfter] = persona.words;
 
   return (
-    <div className={styles.personaSlide} role="group" aria-roledescription="slide" aria-label={persona.question} aria-hidden={hidden}>
+    <div className={styles.personaSlide} aria-hidden={hidden || undefined}>
       <h2 className={styles.cloudTitle} aria-label={persona.question}>
         <span className={styles.cloudTitleRow} aria-hidden="true">
           <span className={styles.cloudTitleSmall}>{smallBefore}</span>
@@ -361,7 +362,7 @@ function PersonaSlide({ persona, hidden }) {
       </h2>
 
       <div className={styles.cloudStage}>
-        <Image className={styles.cloudCharacter} src={persona.image} alt={persona.alt} width={900} height={900} unoptimized />
+        <Image className={styles.cloudCharacter} src={persona.image} alt={hidden ? "" : persona.alt} width={900} height={900} unoptimized />
         <p className={styles.cloudLead}>
           <span className={styles.cloudLeadText}>{persona.lead}</span>
         </p>
@@ -382,94 +383,17 @@ function PersonaSlide({ persona, hidden }) {
 }
 
 function EditorCloudSection() {
-  const count = PERSONAS.length;
-  // A copy of the first slide sits at the end so the loop always travels right to left
-  const slides = useMemo(() => [...PERSONAS, PERSONAS[0]], []);
-  const [index, setIndex] = useState(0);
-  const [animate, setAnimate] = useState(true);
-  const [paused, setPaused] = useState(false);
-  const dragRef = useRef(null);
-
-  const go = (next) => {
-    setAnimate(true);
-    setIndex((current) => {
-      const target = typeof next === "function" ? next(current) : next;
-      return clamp(target, 0, count);
-    });
-  };
-
-  useEffect(() => {
-    if (paused || count < 2) return undefined;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
-    const timer = window.setInterval(() => go((current) => current + 1), PERSONA_INTERVAL);
-    return () => window.clearInterval(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paused, count]);
-
-  useEffect(() => {
-    if (animate) return undefined;
-    const frame = window.requestAnimationFrame(() => window.requestAnimationFrame(() => setAnimate(true)));
-    return () => window.cancelAnimationFrame(frame);
-  }, [animate]);
-
-  const onTransitionEnd = (event) => {
-    if (event.target !== event.currentTarget) return;
-    if (index === count) {
-      setAnimate(false);
-      setIndex(0);
-    }
-  };
-
-  const onPointerDown = (event) => {
-    dragRef.current = event.clientX;
-  };
-
-  const onPointerUp = (event) => {
-    if (dragRef.current === null) return;
-    const dx = event.clientX - dragRef.current;
-    dragRef.current = null;
-    if (Math.abs(dx) < 50) return;
-    if (dx < 0) go((current) => current + 1);
-    else go((current) => (current === 0 ? count - 1 : current - 1));
-  };
-
-  const activeDot = index % count;
-
   return (
-    <section
-      className={styles.cloudSection}
-      aria-roledescription="carousel"
-      aria-label="Kimlar uchun"
-      onFocus={(event) => setPaused(event.target.matches(":focus-visible"))}
-      onBlur={() => setPaused(false)}
-    >
-      <div className={styles.personaViewport} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => (dragRef.current = null)}>
-        <div
-          className={styles.personaTrack}
-          data-animate={animate}
-          style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
-          onTransitionEnd={onTransitionEnd}
-        >
-          {slides.map((persona, slideIndex) => (
-            <PersonaSlide key={`${persona.id}-${slideIndex}`} persona={persona} hidden={slideIndex !== index} />
-          ))}
+    <section className={styles.cloudSection} aria-label="Kimlar uchun">
+      <div className={styles.personaViewport}>
+        <div className={styles.personaTrack} style={{ "--persona-count": PERSONA_SET.length }}>
+          {[0, 1].map((copy) =>
+            PERSONA_SET.map((persona, index) => (
+              <PersonaSlide key={`${copy}-${persona.id}-${index}`} persona={persona} hidden={copy === 1 || index >= PERSONAS.length} />
+            ))
+          )}
         </div>
       </div>
-
-      {count > 1 && (
-        <div className={styles.personaDots}>
-          {PERSONAS.map((persona, dotIndex) => (
-            <button
-              key={persona.id}
-              type="button"
-              className={styles.personaDot}
-              aria-label={persona.question}
-              aria-current={dotIndex === activeDot}
-              onClick={() => go(dotIndex)}
-            />
-          ))}
-        </div>
-      )}
     </section>
   );
 }
