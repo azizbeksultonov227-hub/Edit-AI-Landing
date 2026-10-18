@@ -412,6 +412,128 @@ function EditorCloudSection() {
   );
 }
 
+function AfterEffectsIcon() {
+  return (
+    <svg className={styles.heroPriceIcon} viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="0" y="0.3" width="24" height="23.4" rx="4.25" fill="#00005B" />
+      <text x="12" y="16.6" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="11.5" fill="#9999FF">
+        Ae
+      </text>
+    </svg>
+  );
+}
+
+function LineIcon({ children }) {
+  return (
+    <svg className={styles.lessonLineIcon} viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {children}
+    </svg>
+  );
+}
+
+const lessonIcons = {
+  claude: ClaudeIcon,
+  google: GoogleIcon,
+  higgsfield: HiggsfieldIcon,
+  premiere: PremiereProIcon,
+  aftereffects: AfterEffectsIcon,
+  storyboard: () => (
+    <LineIcon>
+      <rect x="5" y="9" width="16" height="12" rx="2" />
+      <rect x="27" y="9" width="16" height="12" rx="2" />
+      <rect x="5" y="27" width="16" height="12" rx="2" />
+      <rect x="27" y="27" width="16" height="12" rx="2" />
+      <path d="M10 18l3-4 3 3M32 18l4-5 3 4M9 36h8M31 36h8" />
+    </LineIcon>
+  ),
+  palette: () => (
+    <LineIcon>
+      <path d="M24 6C13 6 6 14 6 23c0 9 7 17 16 17 3 0 4-2 3-4-1-3 1-5 4-5h5c5 0 8-4 8-8 0-9-8-17-18-17z" />
+      <circle cx="15" cy="21" r="2.4" fill="#e8613c" stroke="none" />
+      <circle cx="21" cy="13" r="2.4" fill="#f2b33d" stroke="none" />
+      <circle cx="30" cy="13" r="2.4" fill="#5aa469" stroke="none" />
+      <circle cx="36" cy="21" r="2.4" fill="#4b7be5" stroke="none" />
+    </LineIcon>
+  ),
+};
+
+// Course board: polaroid lessons pinned on a string, after the moodboard reference.
+// x / y are the card's top-left in % of the board; the string runs through each pin.
+const LESSONS = [
+  { id: "opus", tools: ["claude"], tint: "#f7e7de", title: "Claude Opus 5.5 bilan video montaj", x: 9, y: 4, tilt: -3 },
+  { id: "higgs", tools: ["higgsfield"], tint: "#eef6d2", title: "Higgsfield’da video generatsiya", x: 56, y: 13, tilt: 2.5 },
+  { id: "code", tools: ["premiere", "claude", "aftereffects"], tint: "#e8e6fb", title: "Claude Code Premiere va After Effects’da montaj qiladi", x: 7, y: 37, tilt: 3 },
+  { id: "all-ai", tools: ["google", "claude", "higgsfield"], tint: "#e3eefb", title: "Barcha sun’iy intellekt vositalari", x: 54, y: 46, tilt: -2.5 },
+  { id: "storyboard", tools: ["storyboard"], tint: "#f4efe5", title: "Raskadrovka va referenslar", x: 11, y: 70, tilt: -2 },
+  { id: "design", tools: ["palette"], tint: "#fbe9ee", title: "Rang, dizayn konsepsiya va skillar", x: 57, y: 78, tilt: 3 },
+];
+const BOARD_RATIO = 1.86; // board height / width
+const CARD_WIDTH = 34; // % of board width
+
+function CourseBoard() {
+  const pins = LESSONS.map(({ x, y }) => [x + CARD_WIDTH / 2, y * BOARD_RATIO + 2.2]);
+
+  return (
+    <section className={styles.courseSection} aria-labelledby="course-title">
+      <h2 id="course-title" className={styles.cloudTitle} aria-label="Kursda nimalarni o‘rganasiz?">
+        <span className={styles.cloudTitleRow} aria-hidden="true">
+          <span className={styles.cloudTitleSmall}>Kursda</span>
+          <span className={styles.cloudTitleBig}>nimalarni</span>
+        </span>
+        <span className={styles.cloudTitleRow} aria-hidden="true">
+          <span className={styles.cloudTitleBig}>o‘rganasiz?</span>
+        </span>
+      </h2>
+
+      <div className={styles.courseBoard} style={{ aspectRatio: `1 / ${BOARD_RATIO}` }}>
+        <span className={styles.courseTape} aria-hidden="true" />
+
+        <svg className={styles.courseString} viewBox={`0 0 100 ${100 * BOARD_RATIO}`} preserveAspectRatio="none" aria-hidden="true">
+          <polyline points={pins.map(([px, py]) => `${px},${py}`).join(" ")} />
+        </svg>
+
+        <p className={styles.courseNote} style={{ left: "58%", top: "3%" }} aria-hidden="true">
+          eng aqlli model ✦
+        </p>
+        <p className={styles.courseNote} style={{ left: "57%", top: "70%" }} aria-hidden="true">
+          montajor o‘rniga AI ✦
+        </p>
+
+        <svg className={styles.courseDoodle} style={{ left: "44%", top: "33%" }} viewBox="0 0 40 36" aria-hidden="true">
+          <path d="M20 33C8 24 3 18 3 11a8 8 0 0 1 17-3 8 8 0 0 1 17 3c0 7-5 13-17 22z" />
+        </svg>
+        <svg className={styles.courseDoodle} style={{ left: "1%", top: "62%", width: "9%" }} viewBox="0 0 60 30" aria-hidden="true">
+          <path d="M3 22c6-14 12-14 14 0s8 14 13 0 9-14 13 0 8 10 14-6" fill="none" />
+        </svg>
+
+        <ol className={styles.courseList}>
+          {LESSONS.map((lesson, index) => (
+            <li
+              key={lesson.id}
+              className={styles.lessonCard}
+              style={{ left: `${lesson.x}%`, top: `${lesson.y}%`, width: `${CARD_WIDTH}%`, rotate: `${lesson.tilt}deg` }}
+            >
+              <span className={styles.lessonPin} aria-hidden="true" />
+              <span className={styles.lessonPhoto} style={{ background: lesson.tint }}>
+                <span className={styles.lessonIcons} data-count={lesson.tools.length}>
+                  {lesson.tools.map((tool) => {
+                    const Icon = lessonIcons[tool];
+                    return <Icon key={tool} />;
+                  })}
+                </span>
+              </span>
+              <span className={styles.lessonCaption}>
+                <span className={styles.lessonIndex}>{String(index + 1).padStart(2, "0")}</span>
+                {lesson.title}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
 function Footer({ footerRef, footerElementRef, titleRef }) {
   const year = new Date().getFullYear();
   const footerTitleLines = [
@@ -791,6 +913,7 @@ export default function Home({ initialSlug = null } = {}) {
         </div>
 
         <EditorCloudSection />
+        <CourseBoard />
       </main>
 
       <ProjectPageOverlay project={activeProject} closeProject={closeProject} />

@@ -1440,3 +1440,156 @@ video.img {
     width: var(--persona-width);
   }
 }
+
+/* Course board: pinned polaroids on a purple string, centred on a clean ground */
+.courseSection {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  margin-bottom: clamp(5rem, 12vw, 11rem);
+  padding-inline: max(var(--padding), 1.25rem);
+}
+
+.courseBoard {
+  container-type: inline-size;
+  max-width: 42rem;
+  position: relative;
+  width: 100%;
+}
+
+.courseString {
+  height: 100%;
+  inset: 0;
+  overflow: visible;
+  position: absolute;
+  width: 100%;
+  z-index: 0;
+}
+
+.courseString polyline {
+  fill: none;
+  stroke: #6d5bd0;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  stroke-width: 2.5px;
+}
+
+.courseList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lessonCard {
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 10px 24px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 2.2cqi;
+  padding: 2.2cqi 2.2cqi 3.4cqi;
+  position: absolute;
+  transition: rotate 0.6s var(--ease-out-elastic), scale 0.6s var(--ease-out-elastic);
+  z-index: 1;
+}
+
+@media (any-hover: hover) {
+  .lessonCard:hover {
+    rotate: 0deg !important;
+    scale: 1.04;
+    z-index: 4;
+  }
+}
+
+.lessonPin {
+  background: radial-gradient(circle at 35% 35%, #a99cf0 0 22%, #6d5bd0 60%, #4a3aa8 100%);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(40, 20, 120, 0.35);
+  height: 2.6cqi;
+  left: 50%;
+  position: absolute;
+  top: 1.4cqi;
+  translate: -50% 0;
+  width: 2.6cqi;
+  z-index: 3;
+}
+
+.lessonPhoto {
+  align-items: center;
+  aspect-ratio: 1 / 0.86;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.lessonIcons {
+  align-items: center;
+  display: flex;
+  font-size: 9cqi;
+  gap: 0.22em;
+}
+
+.lessonIcons[data-count="3"] {
+  font-size: 6.4cqi;
+}
+
+.lessonIcons svg,
+.lessonIcons img {
+  border-radius: 0.22em;
+  filter: drop-shadow(0 0.08em 0.12em rgba(0, 0, 0, 0.12));
+}
+
+.lessonLineIcon {
+  color: #2f2f2f;
+  height: 1.6em;
+  width: 1.6em;
+}
+
+.lessonCaption {
+  color: #2f2f2f;
+  font-family: "Caveat", "Segoe Print", cursive;
+  font-size: 3.8cqi;
+  font-weight: 600;
+  line-height: 1.05;
+  text-align: center;
+}
+
+.lessonIndex {
+  color: #9b9ba1;
+  display: block;
+  font-family: "Poppins", var(--font-family-display);
+  font-size: 0.55em;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.3em;
+}
+
+.courseNote {
+  color: #4a4a4f;
+  font-family: "Caveat", "Segoe Print", cursive;
+  font-size: 3.6cqi;
+  font-weight: 600;
+  margin: 0;
+  position: absolute;
+  rotate: -4deg;
+}
+
+.courseDoodle {
+  fill: #2f2f2f;
+  position: absolute;
+  stroke: #2f2f2f;
+  stroke-linecap: round;
+  stroke-width: 3;
+  width: 5cqi;
+}
+
+.courseTape {
+  background: rgba(150, 168, 110, 0.45);
+  height: 6cqi;
+  position: absolute;
+  right: 2%;
+  rotate: 38deg;
+  top: 30%;
+  width: 18cqi;
+}
