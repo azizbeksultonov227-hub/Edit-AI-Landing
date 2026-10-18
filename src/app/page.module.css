@@ -1614,42 +1614,160 @@ video.img {
   border: 0;
 }
 
-/* Price in the footer: crossed-out old price, beating new price, 24h countdown */
+/* Footer offer: big countdown, "Katta chegirma" after the Big Payday Sale reference, beating percent */
 .priceBlock {
   align-items: center;
   color: #141414;
   display: flex;
   flex-direction: column;
   font-family: "Poppins", var(--font-family-display);
-  gap: 0.35rem;
+  gap: clamp(0.8rem, 2vw, 1.6rem);
+  text-transform: none;
+  width: 100%;
+}
+
+.countdown {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.countdownTime {
+  align-items: flex-start;
+  display: flex;
+}
+
+.countdownGroup {
+  align-items: flex-start;
+  display: inline-flex;
+}
+
+.countdownColon {
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  font-weight: 700;
+  line-height: 1;
+  margin-inline: 0.12em;
+  opacity: 0.55;
+}
+
+.countdownCell {
+  align-items: center;
+  background: #141414;
+  border-radius: clamp(0.8rem, 1.6vw, 1.2rem);
+  color: #d0fe18;
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 1.9em;
+  padding: 0.14em 0.18em 0.12em;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+}
+
+.countdownDigits {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.countdownCell small {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.2em;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  margin-top: 0.15em;
   text-transform: none;
 }
 
-.priceOld {
-  font-size: clamp(1.3rem, 2.8vw, 2.2rem);
-  font-weight: 500;
-  opacity: 0.6;
+.countdownLabel {
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  font-weight: 600;
+  margin: 0;
 }
 
-.priceOld s {
-  text-decoration-color: #e0322b;
-  text-decoration-thickness: 0.12em;
+.saleTitle {
+  align-items: center;
+  color: #ff3a0a;
+  display: flex;
+  flex-direction: column;
+  font-family: "Archivo", "Arial Black", sans-serif;
+  font-size: clamp(3.4rem, 11vw, 9.5rem);
+  font-stretch: 125%;
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.82;
+  margin: clamp(0.4rem, 1.5vw, 1rem) 0 0;
+  text-transform: uppercase;
 }
 
-.priceNew {
-  animation: heartbeat 1.4s ease-in-out infinite;
-  font-size: clamp(3.2rem, 9vw, 7.5rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1;
+.saleLine {
+  display: block;
   white-space: nowrap;
 }
 
-.priceNew small {
-  text-transform: none;
-  font-size: 0.4em;
-  font-weight: 600;
-  letter-spacing: 0;
+.saleCircled {
+  position: relative;
+}
+
+.brushCircle {
+  height: 190%;
+  left: -6%;
+  overflow: visible;
+  position: absolute;
+  rotate: -4deg;
+  top: -42%;
+  width: 112%;
+}
+
+.brushStroke {
+  animation: brushDraw 1.4s var(--ease-out-quart) 0.3s both;
+  stroke-dasharray: 1;
+}
+
+@keyframes brushDraw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.salePercent {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin: clamp(1.6rem, 4.5vw, 3.6rem) 0 0;
+}
+
+@media (width < 768px) {
+  .saleTitle {
+    font-size: 12.5vw;
+  }
+
+  .brushCircle {
+    left: -3%;
+    width: 106%;
+  }
+}
+
+.salePercentLabel {
+  color: #1f4fe0;
+  font-size: clamp(0.95rem, 1.6vw, 1.3rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.salePercentValue {
+  animation: heartbeat 1.4s ease-in-out infinite;
+  color: #ff3a0a;
+  font-family: "Archivo", "Arial Black", sans-serif;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-stretch: 125%;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
 }
 
 @keyframes heartbeat {
@@ -1659,56 +1777,20 @@ video.img {
     transform: scale(1);
   }
   12% {
-    transform: scale(1.09);
+    transform: scale(1.12);
   }
   24% {
-    transform: scale(0.98);
+    transform: scale(0.97);
   }
   32% {
-    transform: scale(1.05);
+    transform: scale(1.06);
   }
-}
-
-.countdown {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  font-size: clamp(0.85rem, 1.2vw, 1rem);
-  font-weight: 500;
-  gap: 0.6rem;
-  justify-content: center;
-  margin: 0.4rem 0 0;
-}
-
-.countdownTime {
-  display: inline-flex;
-  gap: 0.3rem;
-}
-
-.countdownCell {
-  background: #141414;
-  border-radius: 0.5rem;
-  color: #d0fe18;
-  display: inline-flex;
-  flex-direction: column;
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
-  line-height: 1;
-  min-width: 2.6em;
-  padding: 0.35em 0.4em 0.3em;
-}
-
-.countdownCell small {
-  text-transform: none;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.55em;
-  font-weight: 500;
-  margin-top: 0.2em;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .startPulse,
-  .priceNew {
+  .salePercentValue,
+  .brushStroke {
     animation: none;
   }
 }

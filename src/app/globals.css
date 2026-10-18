@@ -1,3 +1,13 @@
+/* Wide, heavy grotesk for the "Katta chegirma" headline */
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-display: swap;
+  src: url("/fonts/Archivo-wdth-latin.woff2") format("woff2");
+}
+
 /* Handwritten notes on the course board */
 @font-face {
   font-family: "Caveat";

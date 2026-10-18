@@ -531,8 +531,9 @@ function CourseBoard() {
 const TELEGRAM_URL = "https://telegram.dog/editmaktab500bot?start=auto";
 // Set this to a webhook (Google Sheets, CRM, Telegram bot) to receive form leads as JSON
 const LEAD_ENDPOINT = "";
-const OLD_PRICE = "4 990 000";
-const NEW_PRICE = "2 190 000";
+const OLD_PRICE = 4499000;
+const NEW_PRICE = 2190000;
+const DISCOUNT_PERCENT = Math.round((1 - NEW_PRICE / OLD_PRICE) * 100); // 51
 const DISCOUNT_MS = 24 * 60 * 60 * 1000;
 const DISCOUNT_KEY = "editmaktab-discount-deadline";
 
@@ -571,24 +572,45 @@ function useDiscountCountdown() {
 
 function Countdown() {
   const left = useDiscountCountdown();
-  if (left === null) return <p className={styles.countdown}>&nbsp;</p>;
-  if (left === 0) return <p className={styles.countdown}>Chegirma muddati tugadi</p>;
-
-  const total = Math.floor(left / 1000);
+  const total = Math.floor((left ?? DISCOUNT_MS) / 1000);
   const parts = [Math.floor(total / 3600), Math.floor((total % 3600) / 60), total % 60].map((n) => String(n).padStart(2, "0"));
 
   return (
-    <p className={styles.countdown} aria-live="off">
-      <span>Chegirma tugashiga:</span>
-      <span className={styles.countdownTime}>
+    <div className={styles.countdown} aria-live="off">
+      <div className={styles.countdownTime}>
         {parts.map((part, index) => (
-          <span key={index} className={styles.countdownCell}>
-            {part}
-            <small>{["soat", "daq", "son"][index]}</small>
+          <span key={index} className={styles.countdownGroup}>
+            {index > 0 && (
+              <span className={styles.countdownColon} aria-hidden="true">
+                :
+              </span>
+            )}
+            <span className={styles.countdownCell}>
+              <span className={styles.countdownDigits}>{part}</span>
+              <small>{["soat", "daqiqa", "soniya"][index]}</small>
+            </span>
           </span>
         ))}
-      </span>
-    </p>
+      </div>
+      <p className={styles.countdownLabel}>{left === 0 ? "Chegirma muddati tugadi" : "Chegirma tugashiga"}</p>
+    </div>
+  );
+}
+
+function BrushCircle() {
+  return (
+    <svg className={styles.brushCircle} viewBox="0 0 1000 340" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <filter id="brush-rough" x="-5%" y="-10%" width="110%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.6 0.05" numOctaves="2" seed="4" result="grain" />
+          <feDisplacementMap in="SourceGraphic" in2="grain" scale="5" />
+        </filter>
+      </defs>
+      <g filter="url(#brush-rough)" fill="none" stroke="#1f4fe0" strokeLinecap="round">
+        <path pathLength="1" className={styles.brushStroke} strokeWidth="26" d="M640 40C470 24 250 46 120 120 20 178 50 270 230 300c200 34 520 26 680-36 120-46 70-150-120-196C640 32 470 30 330 52" />
+        <path pathLength="1" className={styles.brushStroke} strokeWidth="9" opacity="0.45" d="M600 58C450 46 270 64 150 128 60 178 86 258 250 284c200 30 500 20 650-34 100-38 60-130-110-172" />
+      </g>
+    </svg>
   );
 }
 
@@ -682,7 +704,7 @@ function LeadFormModal({ open, onClose }) {
               Kursga yoziling
             </h3>
             <p className={styles.formHint}>
-              Chegirmali narx: <s>{OLD_PRICE}</s> <strong>{NEW_PRICE} so‘m</strong>
+              Hozir <strong>{DISCOUNT_PERCENT}% chegirma</strong> bilan yozilish mumkin.
             </p>
 
             <label className={styles.formField}>
@@ -740,13 +762,18 @@ function Footer({ footerRef, footerElementRef, titleRef }) {
       <div ref={footerRef} className={styles.intersectionPhantom} />
       <footer ref={footerElementRef} className={styles.footer}>
         <div ref={titleRef} className={styles.priceBlock}>
-          <span className={styles.priceOld}>
-            <s>{OLD_PRICE}</s> so‘m
-          </span>
-          <span className={styles.priceNew}>
-            {NEW_PRICE} <small>so‘m</small>
-          </span>
           <Countdown />
+          <h2 className={styles.saleTitle} aria-label={`Katta chegirma: ${DISCOUNT_PERCENT}%`}>
+            <span className={styles.saleLine}>Katta</span>
+            <span className={`${styles.saleLine} ${styles.saleCircled}`}>
+              Chegirma
+              <BrushCircle />
+            </span>
+          </h2>
+          <p className={styles.salePercent} aria-hidden="true">
+            <span className={styles.salePercentLabel}>atigi bugun</span>
+            <span className={styles.salePercentValue}>−{DISCOUNT_PERCENT}%</span>
+          </p>
         </div>
         <StartButton className={`${styles.ctaButton} ${styles.footerCta}`}>BOSHLASH</StartButton>
         <small className={styles.footerSubtitle}>All rights reserved {year} EditMaktab</small>
