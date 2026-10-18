@@ -771,7 +771,7 @@ function Footer({ footerRef, footerElementRef, titleRef }) {
             </span>
           </h2>
           <p className={styles.salePercent} aria-hidden="true">
-            <span className={styles.salePercentLabel}>atigi bugun</span>
+            <span className={styles.salePercentLabel}>faqat bugun</span>
             <span className={styles.salePercentValue}>−{DISCOUNT_PERCENT}%</span>
           </p>
         </div>
