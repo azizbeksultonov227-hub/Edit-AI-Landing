@@ -597,6 +597,13 @@ function Countdown() {
   );
 }
 
+function MiniCountdown() {
+  const left = useDiscountCountdown();
+  const total = Math.floor((left ?? DISCOUNT_MS) / 1000);
+  const text = [Math.floor(total / 3600), Math.floor((total % 3600) / 60), total % 60].map((n) => String(n).padStart(2, "0")).join(":");
+  return <span className={styles.formTimer}>{left === 0 ? "tugadi" : text}</span>;
+}
+
 function BrushCircle() {
   return (
     <svg className={styles.brushCircle} viewBox="0 0 1000 340" preserveAspectRatio="none" aria-hidden="true">
@@ -617,10 +624,12 @@ function BrushCircle() {
 const RESIDENCE_OPTIONS = ["Toshkent shahri", "Boshqa"];
 const AGE_OPTIONS = ["14–18", "18–24", "24+"];
 
-function ChoiceGroup({ name, label, options, value, onChange }) {
+function ChoiceGroup({ step, name, label, options, value, onChange }) {
   return (
     <fieldset className={styles.formChoices}>
-      <legend className={styles.formLabel}>{label}</legend>
+      <legend className={styles.formLabel}>
+        <span className={styles.formStep}>{step}</span> {label}
+      </legend>
       <div className={styles.formChips}>
         {options.map((option) => (
           <label key={option} className={styles.formChip} data-checked={value === option}>
@@ -690,31 +699,59 @@ function LeadFormModal({ open, onClose }) {
 
         {status === "done" ? (
           <div className={styles.formDone}>
-            <h3 id="lead-form-title" className={styles.formTitle}>
-              Rahmat, {values.name.trim()}!
+            <span className={styles.formDoneTile} aria-hidden="true">
+              ✓
+            </span>
+            <h3 id="lead-form-title" className={styles.formHeading}>
+              <span className={styles.formHeadingSmall}>Rahmat,</span>
+              <span className={styles.formHeadingBig}>{values.name.trim()}!</span>
             </h3>
             <p className={styles.formHint}>Arizangiz qabul qilindi. Tez orada siz bilan bog‘lanamiz.</p>
             <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer" className={styles.formSubmit}>
-              Telegram botga o‘tish ↗
+              <span>Telegram botga o‘tish</span>
+              <span className={styles.formSubmitArrow} aria-hidden="true">
+                ↗
+              </span>
             </a>
           </div>
         ) : (
           <form className={styles.form} onSubmit={onSubmit} noValidate>
-            <h3 id="lead-form-title" className={styles.formTitle}>
-              Kursga yoziling
-            </h3>
-            <p className={styles.formHint}>
-              Hozir <strong>{DISCOUNT_PERCENT}% chegirma</strong> bilan yozilish mumkin.
-            </p>
+            <div className={styles.formTop}>
+              <span className={styles.formTiles} aria-hidden="true">
+                <ClaudeIcon />
+                <HiggsfieldIcon />
+                <PremiereProIcon />
+              </span>
+              <h3 id="lead-form-title" className={styles.formHeading} aria-label="Kursga yoziling">
+                <span className={styles.formHeadingSmall} aria-hidden="true">
+                  Kursga
+                </span>
+                <span className={styles.formHeadingBig} aria-hidden="true">
+                  yoziling
+                </span>
+              </h3>
+              <span className={styles.formNote} aria-hidden="true">
+                joylar cheklangan ✦
+              </span>
+            </div>
+
+            <div className={styles.formOffer}>
+              <span className={styles.formOfferText}>
+                Faqat bugun <strong>−{DISCOUNT_PERCENT}%</strong>
+              </span>
+              <MiniCountdown />
+            </div>
 
             <label className={styles.formField}>
-              <span className={styles.formLabel}>Ismingiz</span>
+              <span className={styles.formLabel}>
+                <span className={styles.formStep}>01</span> Ismingiz
+              </span>
               <input
                 ref={firstFieldRef}
                 id="lead-name"
                 type="text"
                 autoComplete="name"
-                placeholder="Ismingiz"
+                placeholder="Masalan, Aziz"
                 value={values.name}
                 onChange={(event) => set("name")(event.target.value)}
                 required
@@ -722,7 +759,9 @@ function LeadFormModal({ open, onClose }) {
             </label>
 
             <label className={styles.formField}>
-              <span className={styles.formLabel}>Telefon raqamingiz</span>
+              <span className={styles.formLabel}>
+                <span className={styles.formStep}>02</span> Telefon raqamingiz
+              </span>
               <input
                 id="lead-phone"
                 type="tel"
@@ -735,8 +774,8 @@ function LeadFormModal({ open, onClose }) {
               />
             </label>
 
-            <ChoiceGroup name="residence" label="Qayerda istiqomat qilasiz?" options={RESIDENCE_OPTIONS} value={values.residence} onChange={set("residence")} />
-            <ChoiceGroup name="age" label="Yoshingiz nechida?" options={AGE_OPTIONS} value={values.age} onChange={set("age")} />
+            <ChoiceGroup step="03" name="residence" label="Qayerda istiqomat qilasiz?" options={RESIDENCE_OPTIONS} value={values.residence} onChange={set("residence")} />
+            <ChoiceGroup step="04" name="age" label="Yoshingiz nechida?" options={AGE_OPTIONS} value={values.age} onChange={set("age")} />
 
             {error && (
               <p className={styles.formError} role="alert">
@@ -745,7 +784,10 @@ function LeadFormModal({ open, onClose }) {
             )}
 
             <button type="submit" className={styles.formSubmit} disabled={status === "sending"}>
-              {status === "sending" ? "Yuborilmoqda…" : "Yuborish"}
+              <span>{status === "sending" ? "Yuborilmoqda…" : "Yuborish"}</span>
+              <span className={styles.formSubmitArrow} aria-hidden="true">
+                ↗
+              </span>
             </button>
           </form>
         )}
