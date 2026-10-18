@@ -310,35 +310,166 @@ function ProjectPageOverlay({ project, closeProject }) {
 }
 
 // Cumulus built from puffs: [cx, cy, r]. Top edge billows, bottom stays flatter.
-function EditorCloudSection() {
+// Audience slides: add a new object here to add another group to the carousel
+const PERSONAS = [
+  {
+    id: "montaj-ustasi",
+    question: "Siz montaj ustasimisiz?",
+    words: ["Siz", "Montaj", "ustasi", "misiz?"],
+    image: "/media/montaj-ustasi.webp",
+    alt: "Montaj ustasi personaji",
+    lead: (
+      <>
+        Ishingizni <strong>10x</strong> tezlashtirib,
+        <br />
+        daromadingizni <strong>10x</strong> ga oshiring.
+      </>
+    ),
+  },
+  {
+    id: "kichik-tadbirkor",
+    question: "Siz kichik tadbirkormisiz?",
+    words: ["Siz", "Kichik", "tadbirkor", "misiz?"],
+    image: "/media/kichik-tadbirkor.webp",
+    alt: "Kichik tadbirkor personaji",
+    lead: (
+      <>
+        Videolarni <strong>10x</strong> tezroq
+        <br />
+        va <strong>10x</strong> arzonroq yarating.
+      </>
+    ),
+  },
+];
+
+const PERSONA_INTERVAL = 5500;
+
+function PersonaSlide({ persona, hidden }) {
+  const [smallBefore, bigFirst, bigSecond, smallAfter] = persona.words;
+
   return (
-    <section className={styles.cloudSection} aria-labelledby="cloud-title">
-      <h2 id="cloud-title" className={styles.cloudTitle} aria-label="Siz montaj ustasimisiz?">
+    <div className={styles.personaSlide} role="group" aria-roledescription="slide" aria-label={persona.question} aria-hidden={hidden}>
+      <h2 className={styles.cloudTitle} aria-label={persona.question}>
         <span className={styles.cloudTitleRow} aria-hidden="true">
-          <span className={styles.cloudTitleSmall}>Siz</span>
-          <span className={styles.cloudTitleBig}>Montaj</span>
+          <span className={styles.cloudTitleSmall}>{smallBefore}</span>
+          <span className={styles.cloudTitleBig}>{bigFirst}</span>
         </span>
         <span className={styles.cloudTitleRow} aria-hidden="true">
-          <span className={styles.cloudTitleBig}>ustasi</span>
-          <span className={styles.cloudTitleSmall}>misiz?</span>
+          <span className={styles.cloudTitleBig}>{bigSecond}</span>
+          <span className={styles.cloudTitleSmall}>{smallAfter}</span>
         </span>
       </h2>
 
       <div className={styles.cloudStage}>
-        <Image className={styles.cloudCharacter} src="/media/montaj-ustasi.webp" alt="Montaj ustasi personaji" width={900} height={900} unoptimized />
+        <Image className={styles.cloudCharacter} src={persona.image} alt={persona.alt} width={900} height={900} unoptimized />
         <p className={styles.cloudLead}>
-          <span className={styles.cloudLeadText}>
-            Ishingizni <strong>10x</strong> tezlashtirib,
-            <br />
-            daromadingizni <strong>10x</strong> ga oshiring.
-          </span>
+          <span className={styles.cloudLeadText}>{persona.lead}</span>
         </p>
       </div>
 
-      <a href="https://telegram.dog/editmaktab500bot?start=auto" target="_blank" rel="noopener noreferrer" className={styles.cloudCta}>
+      <a
+        href="https://telegram.dog/editmaktab500bot?start=auto"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.cloudCta}
+        tabIndex={hidden ? -1 : undefined}
+      >
         <span>Boshlash</span>
         <span className={styles.cloudCtaArrow} aria-hidden="true">↗</span>
       </a>
+    </div>
+  );
+}
+
+function EditorCloudSection() {
+  const count = PERSONAS.length;
+  // A copy of the first slide sits at the end so the loop always travels right to left
+  const slides = useMemo(() => [...PERSONAS, PERSONAS[0]], []);
+  const [index, setIndex] = useState(0);
+  const [animate, setAnimate] = useState(true);
+  const [paused, setPaused] = useState(false);
+  const dragRef = useRef(null);
+
+  const go = (next) => {
+    setAnimate(true);
+    setIndex((current) => {
+      const target = typeof next === "function" ? next(current) : next;
+      return clamp(target, 0, count);
+    });
+  };
+
+  useEffect(() => {
+    if (paused || count < 2) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const timer = window.setInterval(() => go((current) => current + 1), PERSONA_INTERVAL);
+    return () => window.clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paused, count]);
+
+  useEffect(() => {
+    if (animate) return undefined;
+    const frame = window.requestAnimationFrame(() => window.requestAnimationFrame(() => setAnimate(true)));
+    return () => window.cancelAnimationFrame(frame);
+  }, [animate]);
+
+  const onTransitionEnd = (event) => {
+    if (event.target !== event.currentTarget) return;
+    if (index === count) {
+      setAnimate(false);
+      setIndex(0);
+    }
+  };
+
+  const onPointerDown = (event) => {
+    dragRef.current = event.clientX;
+  };
+
+  const onPointerUp = (event) => {
+    if (dragRef.current === null) return;
+    const dx = event.clientX - dragRef.current;
+    dragRef.current = null;
+    if (Math.abs(dx) < 50) return;
+    if (dx < 0) go((current) => current + 1);
+    else go((current) => (current === 0 ? count - 1 : current - 1));
+  };
+
+  const activeDot = index % count;
+
+  return (
+    <section
+      className={styles.cloudSection}
+      aria-roledescription="carousel"
+      aria-label="Kimlar uchun"
+      onFocus={(event) => setPaused(event.target.matches(":focus-visible"))}
+      onBlur={() => setPaused(false)}
+    >
+      <div className={styles.personaViewport} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => (dragRef.current = null)}>
+        <div
+          className={styles.personaTrack}
+          data-animate={animate}
+          style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
+          onTransitionEnd={onTransitionEnd}
+        >
+          {slides.map((persona, slideIndex) => (
+            <PersonaSlide key={`${persona.id}-${slideIndex}`} persona={persona} hidden={slideIndex !== index} />
+          ))}
+        </div>
+      </div>
+
+      {count > 1 && (
+        <div className={styles.personaDots}>
+          {PERSONAS.map((persona, dotIndex) => (
+            <button
+              key={persona.id}
+              type="button"
+              className={styles.personaDot}
+              aria-label={persona.question}
+              aria-current={dotIndex === activeDot}
+              onClick={() => go(dotIndex)}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

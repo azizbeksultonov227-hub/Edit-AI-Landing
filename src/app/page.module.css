@@ -1254,6 +1254,66 @@ video.img {
   width: 100vw;
 }
 
+/* Persona carousel: each slide is a full group, sliding right to left */
+.personaViewport {
+  overflow-x: clip;
+  touch-action: pan-y;
+  width: 100%;
+}
+
+.personaTrack {
+  display: flex;
+  will-change: transform;
+}
+
+.personaTrack[data-animate="true"] {
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.personaSlide {
+  align-items: center;
+  display: flex;
+  flex: 0 0 100%;
+  flex-direction: column;
+  min-width: 0;
+  padding-bottom: 2rem;
+}
+
+.personaDots {
+  display: flex;
+  gap: 0.55rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.personaDot {
+  appearance: none;
+  background: #d5d5d8;
+  border: 0;
+  border-radius: 999rem;
+  cursor: pointer;
+  height: 0.5rem;
+  padding: 0;
+  transition: width 0.4s var(--ease-out-quart), background 0.4s;
+  width: 0.5rem;
+}
+
+.personaDot[aria-current="true"] {
+  background: #1f1f21;
+  width: 1.6rem;
+}
+
+.personaDot:focus-visible {
+  outline: 0.15rem solid #1f1f21;
+  outline-offset: 0.2rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .personaTrack[data-animate="true"] {
+    transition-duration: 0.01s;
+  }
+}
+
 /* Headline: two heavy words, each paired with a small word beside it */
 .cloudTitle {
   align-items: center;
