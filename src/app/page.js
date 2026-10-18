@@ -310,94 +310,9 @@ function ProjectPageOverlay({ project, closeProject }) {
 }
 
 // Cumulus built from puffs: [cx, cy, r]. Top edge billows, bottom stays flatter.
-// Cumulus shaped after the reference: big lobes up top, a dip in the middle, bumpy underside. [cx, cy, r]
-const CLOUD_PUFFS = [
-  [120, 290, 95], [215, 215, 120], [330, 160, 150], [460, 195, 125], [565, 225, 105], [680, 180, 140],
-  [805, 215, 120], [895, 285, 95], [190, 360, 95], [330, 390, 105], [500, 400, 110], [670, 392, 105],
-  [820, 360, 92], [400, 250, 110], [610, 270, 110],
-];
-const CLOUD_HIGHLIGHTS = [
-  [320, 120, 70], [680, 140, 66], [215, 190, 50], [805, 190, 50], [460, 170, 52],
-];
-
-function FluffyCloud({ className }) {
-  return (
-    <svg className={className} viewBox="0 -20 1000 540" overflow="visible" aria-hidden="true">
-      <defs>
-        <radialGradient id="cloud-puff" cx="42%" cy="32%" r="68%">
-          <stop offset="0%" stopColor="#f4faff" />
-          <stop offset="52%" stopColor="#e1effc" />
-          <stop offset="82%" stopColor="#bcdaf4" />
-          <stop offset="100%" stopColor="#9bc5ea" />
-        </radialGradient>
-        <filter id="cloud-texture" x="-20%" y="-30%" width="140%" height="160%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="11" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="24" result="shaped" />
-          <feGaussianBlur in="shaped" stdDeviation="2" />
-        </filter>
-        <filter id="cloud-soft" x="-30%" y="-50%" width="160%" height="200%">
-          <feGaussianBlur stdDeviation="16" />
-        </filter>
-        <filter id="cloud-shadow" x="-30%" y="-80%" width="160%" height="260%">
-          <feGaussianBlur stdDeviation="26" />
-        </filter>
-      </defs>
-      <ellipse cx="510" cy="505" rx="390" ry="30" fill="#7fa6cc" opacity="0.3" filter="url(#cloud-shadow)" />
-      <g filter="url(#cloud-texture)" fill="url(#cloud-puff)">
-        <ellipse cx="505" cy="330" rx="400" ry="135" />
-        {[...CLOUD_PUFFS].sort((a, b) => b[1] - a[1]).map(([cx, cy, r]) => (
-          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} />
-        ))}
-      </g>
-      <g fill="#8fbbe4" opacity="0.45" filter="url(#cloud-soft)">
-        <ellipse cx="320" cy="430" rx="120" ry="40" />
-        <ellipse cx="520" cy="445" rx="170" ry="44" />
-        <ellipse cx="720" cy="430" rx="120" ry="40" />
-      </g>
-      <g fill="#ffffff" opacity="0.75" filter="url(#cloud-soft)">
-        {CLOUD_HIGHLIGHTS.map(([cx, cy, r]) => (
-          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} />
-        ))}
-      </g>
-    </svg>
-  );
-}
-
-function DoodleCloud({ className }) {
-  return (
-    <svg className={className} viewBox="0 0 120 64" aria-hidden="true">
-      <path
-        d="M22 52c-10 0-16-7-16-15 0-8 7-14 15-14 2-10 11-17 22-17 9 0 17 5 20 13 3-2 7-3 11-3 11 0 19 8 19 18 8 1 13 7 13 13 0 3-2 5-5 5H22z"
-        fill="#fff"
-        stroke="#111"
-        strokeWidth="4"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function DoodleWing({ className }) {
-  return (
-    <svg className={className} viewBox="0 0 160 130" aria-hidden="true">
-      <path
-        d="M8 112C2 70 30 22 92 8c28-6 54-2 64 8-6 14-18 22-32 26 12 6 18 14 18 24-14 6-28 6-40 4 8 8 10 18 6 26-14 4-28 2-40-2 2 10-2 18-10 24-18 2-36 0-50-6z"
-        fill="#fff"
-        stroke="#111"
-        strokeWidth="5"
-        strokeLinejoin="round"
-      />
-      <path d="M30 96c26-14 56-24 88-30M40 70c26-14 56-22 88-26" fill="none" stroke="#111" strokeWidth="4" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 function EditorCloudSection() {
   return (
     <section className={styles.cloudSection} aria-labelledby="cloud-title">
-      <DoodleCloud className={`${styles.doodleCloud} ${styles.doodleCloudLeft}`} />
-      <DoodleCloud className={`${styles.doodleCloud} ${styles.doodleCloudRight}`} />
-
       <h2 id="cloud-title" className={styles.cloudTitle} aria-label="Siz montaj ustasimisiz?">
         <span className={styles.cloudTitleSmall} aria-hidden="true">Siz</span>
         <span className={styles.cloudTitleBig} aria-hidden="true">Montaj</span>
@@ -406,12 +321,7 @@ function EditorCloudSection() {
       </h2>
 
       <div className={styles.cloudStage}>
-        <FluffyCloud className={styles.cloudShape} />
-        <div className={styles.cloudRider}>
-          <DoodleWing className={`${styles.cloudWing} ${styles.cloudWingLeft}`} />
-          <DoodleWing className={`${styles.cloudWing} ${styles.cloudWingRight}`} />
-          <Image className={styles.cloudPerson} src="/media/editor-on-cloud.svg" alt="Bulut ustida o‘tirgan montajor" width={1340} height={2040} unoptimized />
-        </div>
+        <Image className={styles.cloudCharacter} src="/media/montaj-ustasi.jpg" alt="Montaj ustasi personaji" width={736} height={736} unoptimized />
         <a href="https://telegram.dog/editmaktab500bot?start=auto" target="_blank" rel="noopener noreferrer" className={styles.cloudCta}>
           <span>Boshlash</span>
           <span className={styles.cloudCtaArrow} aria-hidden="true">↗</span>
