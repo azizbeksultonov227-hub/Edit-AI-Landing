@@ -285,6 +285,7 @@
 }
 
 .heroImages .heroImage.heroImageTall .heroPrice {
+  --price-float: -0.9rem;
   --price-x: 0%;
 }
 
